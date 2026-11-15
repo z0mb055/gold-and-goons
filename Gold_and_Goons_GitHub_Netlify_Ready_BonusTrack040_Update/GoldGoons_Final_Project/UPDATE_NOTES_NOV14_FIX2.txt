@@ -1,0 +1,17 @@
+Gold & Goons TCG Companion — Follow-up fixes
+
+- Corrected the swapped full-card artwork for Bonus Track #040 and Cookie Cakewalk.
+- Added dismissal/toggle behavior for keyword explanations.
+- Keyword/related-card popups reset when a different card is opened.
+- Added clickable definitions for Trip and Pay(Diamond), and ensured Diamond/Diamonds are clickable.
+- Added a temporary Crossfire definition placeholder because its actual rules text was not included in the supplied keyword list.
+- Tightened the four-player tracker layout so the bottom player stat bars fit more comfortably.
+- Removed “Tomorrow's Game” wording and changed the share heading to “Share Deck With Friends!”
+- Removed the “Quick Tip for Tomorrow's Match” heading while retaining the tip body.
+- Made the white background of the Gold & Goons logo transparent.
+
+Validation:
+- 180 official card image references checked; no missing image files.
+- 20 related-card image references checked; no missing image files.
+- TypeScript/JSX transpilation: zero syntax diagnostics.
+- Full Vite build was not run because dependencies were not available in the offline environment.

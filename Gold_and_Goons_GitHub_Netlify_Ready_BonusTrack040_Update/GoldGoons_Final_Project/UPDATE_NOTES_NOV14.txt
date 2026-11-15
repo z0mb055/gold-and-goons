@@ -1,0 +1,27 @@
+Gold & Goons TCG Companion — November 14, 2026 update
+
+This is a complete project folder. Extract it and run START-GOLD-AND-GOONS.bat on Windows.
+
+New changes in this update
+- Imported the official rules text and flavor text for all 180 cards from the supplied CSV.
+- Card rules text is displayed in normal weight; recognized keywords and terms are bold and clickable. Discard and Sacrifice are also emphasized even where the CSV did not mark them bold.
+- Diamonds remains a resource term (not a keyword); it is italicized and clickable to show its supplied explanation.
+- Added keyword help for all supplied keyword groups, including dynamic values for Paywall, Virus, Swarm, Upgrade, and Pay.
+- Added related-card popups for Blobteria, Blob, Lil' Blobabies, Fire Trap Token, Tabula Rasa, Goorunt, Dragoon, Petravir, Copy Token, and Transfigooration Blob.
+- Flame cards show a Related Cards link to the Fire Trap Token.
+- Added the supplied Gold and Goons logo.
+- Added a tribe-filter selection limit: up to two non-Neutral tribes. Neutrals remain selectable at any time. Selecting a third non-Neutral tribe replaces the most recently selected non-Neutral tribe.
+- Replaced the full-card artwork for Gate of the Sun (card 163), Tyrant of Death, Borlogg (card 35), and Dr. Heal Hammer (card 67).
+- Corrected Gate of the Sun to Trap and retained its Durability 2.
+
+Previously implemented changes retained
+- Goon Mortar / Drawing Frenzy / Micro Blob-pult artwork mapping.
+- Cost, Rarity, and Name ascending/descending sort controls.
+- Tribe-group order: Blob, Goonger, Bina, Mutant, Slobbant, Neutral.
+- Existing deck builder, deck sharing, match tracker, local persistence, and card collection functionality.
+
+Notes
+- The supplied CSV is used as the source for card rules text and flavor text. Gate of the Sun's type is explicitly corrected to Trap as requested.
+- Dr. Heal Hammer is supplied as an image separately; its full-card scan is included in public/cards/066.webp.
+- The project includes 180 card images plus the supplied related-card scans and logo.
+- TypeScript/JSX transpilation was checked successfully. A full Vite production build was not run in this environment because dependency installation did not complete; the project includes package.json and the Windows start script to install dependencies and launch locally.

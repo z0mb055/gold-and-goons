@@ -1,0 +1,1 @@
+FIX: renderInteractiveCardText is now declared in the App component scope, after keyword/related-card state. It was accidentally nested inside the collectionCards sort comparator, so the detail modal could not access it and crashed with ReferenceError. No card data or image mappings were changed in this repair.
