@@ -4576,7 +4576,7 @@ export default function App() {
                 </div>
 
                 {/* Bottom Card Counter Pill (7/30 CARDS) & Quick Deck Actions */}
-                <div className="pt-3 mt-2 border-t border-zinc-800 space-y-2">
+                <div className="pt-3 mt-2 pb-20 border-t border-zinc-800 space-y-2">
                   <div
                     className={`w-full py-2.5 px-4 rounded-2xl border-2 flex items-center justify-center gap-2 font-black text-xl tracking-wide transition ${
                       totalCardsInDeck === 30
