@@ -3437,6 +3437,17 @@ export default function App() {
   const [hoveredDeckCardTop, setHoveredDeckCardTop] = useState(0);
   const [deckViewerSortMode, setDeckViewerSortMode] = useState('deck');
   const [deckViewerSortDirection, setDeckViewerSortDirection] = useState('asc');
+  const [newsPosts, setNewsPosts] = useState([]);
+
+useEffect(() => {
+  fetch('/updates.json')
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to load updates');
+      return response.json();
+    })
+    .then(data => setNewsPosts(data))
+    .catch(error => console.error('News loading error:', error));
+}, []);
 
   // Cards & Custom Cards State
   const [customCards, setCustomCards] = useState(() => {
@@ -5260,13 +5271,13 @@ export default function App() {
               <h1 className="mt-1 text-3xl sm:text-4xl font-black text-white">News & Updates</h1>
               <p className="mt-2 text-zinc-400">Announcements, balance changes, new cards, and app updates.</p>
             </div>
-            {NEWS_POSTS.length ? (
+            {newsPosts.length ? (
               <div className="space-y-4">
-                {NEWS_POSTS.map((post) => (
+                {newsPosts.map((post) => (
                   <article key={post.id} className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 sm:p-7">
                     <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-yellow-400"><span>{post.category || 'Announcement'}</span><span className="text-zinc-600">•</span><time>{post.date}</time></div>
                     <h2 className="mt-3 text-2xl font-black text-white">{post.title}</h2>
-                    <p className="mt-3 text-zinc-300 leading-relaxed whitespace-pre-line">{post.body}</p>
+                    <p className="mt-3 text-zinc-300 leading-relaxed whitespace-pre-line">{post.description}</p>
                   </article>
                 ))}
               </div>
