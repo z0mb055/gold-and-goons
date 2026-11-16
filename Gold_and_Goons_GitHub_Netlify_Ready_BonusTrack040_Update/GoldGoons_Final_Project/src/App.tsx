@@ -3273,7 +3273,7 @@ const KEYWORD_DEFINITIONS = {
   "Air Blocker": "Avian units can be attacked by this and they cannot pass through this.",
   "Boned": "Takes 1 less damage from all sources.",
   "Everlasting": "Cannot be destroyed instantly by abilities.",
-  "Immobile": "Cannot be moved and cannot change lanes."
+  "Immobile": "Cannot be moved and cannot change lanes.",
   "Paywall": "When an enemy targets this card with an ability, they must spend (X). If they do not, then they are forced to choose another target/the ability does not affect this card.",
   "Revenge": "When damaged, this unit deals damage equal to its STR back.",
   "Taunt": "Enemy Goons, Towers, Tricks, and Trinkets must target this unit before targeting any other friendly unit or player behind this unit. Enemy Goons in adjacent lanes entering the same or previous column must attack the Taunt unit adjacently without changing lanes.",
