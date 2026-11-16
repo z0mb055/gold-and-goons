@@ -3258,7 +3258,7 @@ const CounterIcon = ({ icon, className = 'w-7 h-7' }) => {
 
 const KEYWORD_DEFINITIONS = {
   "Brawl": "This attacks simultaneously with the opposing unit instead of following combat order.",
-  "Crossfire": "Crossfire is a keyword whose specific rules text has not yet been supplied. Add the official Crossfire definition here when available.",
+  "Crossfire": "Can attack units in adjacent lanes.",
   "Trip": "When a unit steps or is played on top of this card, reveal it, trigger its ability, and remove 1 Durability.",
   "Pay(Diamond)": "Pay one Diamond to activate this card’s additional ability.",
   "Celerity": "Always attacks first. If attacking another unit with Celerity, they both attack simultaneously instead.",
@@ -3270,7 +3270,7 @@ const KEYWORD_DEFINITIONS = {
   "Sidewinder": "After attacking, this moves to the adjacent lane.",
   "Virus": "When this destroys a card, all other enemy units on its column and the one behind it get -X/-X. If there are no enemy units initially in that radius, then the opponent loses X health. Virus cannot trigger itself.",
   "Avian": "Cannot be blocked by non-Avian or non-Air Blocker Goons and Traps.",
-  "Air Blocker": "Avian units may be attacked by this and they cannot pass through this.",
+  "Air Blocker": "Avian units can be attacked by this and they cannot pass through this.",
   "Boned": "Takes 1 less damage from all sources.",
   "Everlasting": "Cannot be destroyed instantly by abilities.",
   "Paywall": "When an enemy targets this card with an ability, they must spend (X). If they do not, then they are forced to choose another target/the ability does not affect this card.",
@@ -3286,15 +3286,15 @@ const KEYWORD_DEFINITIONS = {
   "Discard": "Remove a card from your hand and put it in the Gooraveyard.",
   "Dredge": "Draw the top card from the Gooraveyard.",
   "Recall": "Returns to the player's hand with base stats and cost.",
-  "Recycle": "Put the top card of your deck in the Gooraveyard.",
+  "Recycle": "Put the top card of your deck into the Gooraveyard.",
   "Invader": "When this enters the opponent’s side, it gains this extra ability. It is removed when they exit the side.",
   "Valor": "When this enters the Half-Line, it gains this extra ability. It is removed when they exit the Half-line.",
   "Imbue": "Instead of equipping this to a card on the board, it must be equipped while that card is in your hand.",
   "Overslimed": "This card must be played faced down and IF you are player 2, before the opponent’s turn. While face down, it is not a unit; it cannot be damaged, targeted, and does not block or attack. At the end of the opponent’s turn, reveal it. When revealed, it enters play normally.",
-  "Upgrade": "Additional ability activates when you spend X resources, usually gold, on the card when it's played.",
+  "Upgrade": "Additional ability activates when you spend (X) when playing this card.",
   "Banish": "This card is removed from the game and does not go to the Gooraveyard.",
   "Diamonds": "One diamond is equal to three gold. They can be spent instead of gold.",
-  "Pay": "Additional ability activates when you spend X amount of resources, usually gold, on this card.",
+  "Pay": "Additional ability activates when you spend (X) on this card during your turn.",
   "Sacrifice": "Any act of killing your own cards is considered a sacrifice."
 };
 
