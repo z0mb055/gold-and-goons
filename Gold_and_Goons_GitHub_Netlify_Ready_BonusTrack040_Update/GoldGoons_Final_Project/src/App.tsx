@@ -36,7 +36,7 @@ import {
 
 const FACTIONS = [
   { id: 'red', name: 'Blob', color: '#dc2626', bg: 'bg-red-600', border: 'border-red-400', text: 'text-red-400', lightBg: 'bg-red-950/60' },
-  { id: 'yellow', name: 'Goonger', color: '#e3ea08', bg: 'bg-yellow-500', border: 'border-yellow-300', text: 'text-yellow-400', lightBg: 'bg-yellow-950/60' },
+  { id: 'yellow', name: 'Goonger', color: '#ede84c', bg: 'bg-yellow-500', border: 'border-yellow-300', text: 'text-yellow-400', lightBg: 'bg-yellow-950/60' },
   { id: 'pink', name: 'Bina', color: '#ec4899', bg: 'bg-pink-500', border: 'border-pink-300', text: 'text-pink-400', lightBg: 'bg-pink-950/60' },
   { id: 'blue', name: 'Mutant', color: '#3b82f6', bg: 'bg-blue-500', border: 'border-blue-300', text: 'text-blue-400', lightBg: 'bg-blue-950/60' },
   { id: 'purple', name: 'Slobbant', color: '#170e2e', bg: 'bg-purple-600', border: 'border-purple-300', text: 'text-purple-400', lightBg: 'bg-purple-950/60' },
