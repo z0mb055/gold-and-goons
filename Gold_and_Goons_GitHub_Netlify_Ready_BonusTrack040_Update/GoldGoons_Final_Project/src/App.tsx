@@ -36,12 +36,21 @@ import {
 
 const FACTIONS = [
   { id: 'red', name: 'Blob', color: '#dc2626', bg: 'bg-red-600', border: 'border-red-400', text: 'text-red-400', lightBg: 'bg-red-950/60' },
-  { id: 'yellow', name: 'Goonger', color: '#ede84c', bg: 'bg-yellow-500', border: 'border-yellow-300', text: 'text-yellow-400', lightBg: 'bg-yellow-950/60' },
+  { id: 'yellow', name: 'Goonger', color: '#e3ea08', bg: 'bg-yellow-500', border: 'border-yellow-300', text: 'text-yellow-400', lightBg: 'bg-yellow-950/60' },
   { id: 'pink', name: 'Bina', color: '#ec4899', bg: 'bg-pink-500', border: 'border-pink-300', text: 'text-pink-400', lightBg: 'bg-pink-950/60' },
   { id: 'blue', name: 'Mutant', color: '#3b82f6', bg: 'bg-blue-500', border: 'border-blue-300', text: 'text-blue-400', lightBg: 'bg-blue-950/60' },
   { id: 'purple', name: 'Slobbant', color: '#170e2e', bg: 'bg-purple-600', border: 'border-purple-300', text: 'text-purple-400', lightBg: 'bg-purple-950/60' },
   { id: 'gray', name: 'Neutral', color: '#6b7280', bg: 'bg-gray-500', border: 'border-gray-300', text: 'text-gray-300', lightBg: 'bg-gray-800/70' },
 ];
+
+// OWNER-MAINTAINED CARD RULINGS
+// Add or update entries here using the permanent card ID as the key.
+// This is source-code managed: a client-side password would not provide
+// owner-only security because browser code is visible to app users.
+// Values may be a string or an array of strings for multiple rulings.
+const CARD_RULINGS = {
+  // 'gg-card-025': ['Example ruling for a specific game mode.'],
+};
 
 // Official 180-card database generated from the supplied Gold & Goons card sheet.
 const OFFICIAL_CARDS = [
@@ -462,10 +471,10 @@ const OFFICIAL_CARDS = [
     "tribe": "Blob",
     "type": "Goon",
     "cost": 4,
-    "power": 2,
-    "health": 4,
+    "power": 3,
+    "health": 1,
     "durability": null,
-    "ability": "Crossfire. When played, deal 1 damage to all enemy units and opponent.",
+    "ability": "Crossfire, Nimble. When played, deal 1 damage to all enemy units and opponents.",
     "flavor": "\"I ALWAYS make a cool entrance.\"",
     "imagePath": "/cards/024.webp",
     "deckArtPath": "/deck-art/024.webp"
@@ -499,7 +508,7 @@ const OFFICIAL_CARDS = [
     "power": 2,
     "health": 2,
     "durability": null,
-    "ability": "Stack. When played, transform ALL cards in play into 2/2 Transfigooration Blobs with Stack.",
+    "ability": "Stack. When played, transform ALL cards in play into 2/2 Transfigooration Blobs with Stack. All friendly Transfigooration Blobs have Nimble.",
     "flavor": "\"You had a board of 10/10's? Skill issue. You're a 2/2 now.\"",
     "imagePath": "/cards/026.webp",
     "deckArtPath": "/deck-art/026.webp"
@@ -924,7 +933,7 @@ const OFFICIAL_CARDS = [
     "power": 2,
     "health": 4,
     "durability": null,
-    "ability": "All friendly units on your side have Air Blocker. Lasts 2 turns.",
+    "ability": "All friendly units on your side have Air Blocker and Paywall 1. Lasts 2 turns.",
     "flavor": "\"YOU SHALL NOT PASS!\"",
     "imagePath": "/cards/051.webp",
     "deckArtPath": "/deck-art/051.webp"
@@ -955,8 +964,8 @@ const OFFICIAL_CARDS = [
     "tribe": "Lubina",
     "type": "Goon",
     "cost": 4,
-    "power": 2,
-    "health": 1,
+    "power": 3,
+    "health": 3,
     "durability": null,
     "ability": "When played: All friendly Goons get +1/+1.",
     "flavor": "Her lyrics have significant meaning, so much so that Goons immediately feel empowered listening to it.",
@@ -1757,7 +1766,7 @@ const OFFICIAL_CARDS = [
     "power": null,
     "health": null,
     "durability": null,
-    "ability": "Equip a Goon: Sidewinder and Stack.",
+    "ability": "Imbue a Goon: Sidewinder and Stack. It also gets Wardlocked until the end of combat.",
     "flavor": "¡Arrrrrrribaa!",
     "imagePath": "/cards/100.webp",
     "deckArtPath": "/deck-art/100.webp"
@@ -1822,10 +1831,10 @@ const OFFICIAL_CARDS = [
     "tribe": "Lubina",
     "type": "Goon",
     "cost": 5,
-    "power": 1,
+    "power": 6,
     "health": 5,
     "durability": null,
-    "ability": "Overkill, Overslimed. When revealed, this gets +1/+0 for every (1) you currently have. If this destroys two cards in a single turn, steal (1) from the opponent.",
+    "ability": "Overkill, Overslimed. When revealed, if the Opponent has (5) or more, this gets +1/+0. The first time this destroys two or more cards this turn, the Opponent loses (1).",
     "flavor": "\"Listen, I'm not greedy, its the one in front of you!\"",
     "imagePath": "/cards/104.webp",
     "deckArtPath": "/deck-art/104.webp"
@@ -1908,9 +1917,9 @@ const OFFICIAL_CARDS = [
     "type": "Goon",
     "cost": 5,
     "power": 4,
-    "health": 4,
+    "health": 3,
     "durability": null,
-    "ability": "Crossfire. When played, create two 1/1 Lil' Blobabies with Stack on your side.",
+    "ability": "Crossfire. When played, create two 1/1 Lil’ Blobabies on your side with Stack. If they were created on the same column, they both get Nimble.",
     "flavor": "If motherhood wasn't hard enough, try bringing your own kids to battle.",
     "imagePath": "/cards/109.webp",
     "deckArtPath": "/deck-art/109.webp"
@@ -2197,7 +2206,7 @@ const OFFICIAL_CARDS = [
     "type": "Goon",
     "cost": 4,
     "power": 3,
-    "health": 3,
+    "health": 5,
     "durability": null,
     "ability": "Overkill, Sluggish. When this destroys an enemy unit, this gets +1/+0.",
     "flavor": "\"Wheeeeeewwww! This sucks! It sucks, it sucks, it sucks, it sucks, it sucks, it sucks, it sucks sooooo bad! It sucks so bad to be weak, ain't that right, Blobby!\"",
@@ -2301,7 +2310,7 @@ const OFFICIAL_CARDS = [
     "power": 4,
     "health": 9,
     "durability": null,
-    "ability": "Revenge. If the opponent plays a Goon in another lane, this moves a space forward to that lane. This damages all targets on the space in front and behind.",
+    "ability": "Revenge, Wardlocked. If the opponent plays a Goon in another lane, this moves a space forward to that lane. This damages all targets on the space in front and behind.",
     "flavor": "\"I have survived because I was born struggling. I will keep swinging this slab of iron until my breath stops, my heart bursts, and the ground swallows my bones!\"",
     "imagePath": "/cards/132.webp",
     "deckArtPath": "/deck-art/132.webp"
@@ -2416,11 +2425,11 @@ const OFFICIAL_CARDS = [
     "rarity": "Aureum",
     "tribe": "Slobbant",
     "type": "Trinket",
-    "cost": 1,
+    "cost": 2,
     "power": null,
     "health": null,
     "durability": null,
-    "ability": "Imbue a unit: This is played on your opponent's side and it is in their control. When this loses health, you gain (1). When this is destroyed, draw a card.",
+    "ability": "Imbue a unit: This is played on your opponent's side and it is in their control. The first time this loses health this turn, the opponent takes that much damage. When destroyed, Banish this to draw a card and it costs (1) less.",
     "flavor": "A liability, just for you!",
     "imagePath": "/cards/139.webp",
     "deckArtPath": "/deck-art/139.webp"
@@ -2471,7 +2480,7 @@ const OFFICIAL_CARDS = [
     "power": 3,
     "health": 2,
     "durability": null,
-    "ability": "When a friendly card is destroyed, deal 1 damage to yourself and draw a card.",
+    "ability": "When a friendly card is destroyed, deal 1 damage to yourself and draw a card. When an enemy card is destroyed, you may discard a card to gain (1).",
     "flavor": "\"Normally, you get cuts from paper, but now we cut you to get paper!\"",
     "imagePath": "/cards/142.webp",
     "deckArtPath": "/deck-art/142.webp"
@@ -2536,10 +2545,10 @@ const OFFICIAL_CARDS = [
     "tribe": "Neutral",
     "type": "Goon",
     "cost": 1,
-    "power": 2,
+    "power": 1,
     "health": 1,
     "durability": null,
-    "ability": "Air Blocker. When you discard a card, you may Pay(1) to draw a copy of it.",
+    "ability": "Avian. When you discard a card, you may Pay(1) to draw a copy of it.",
     "flavor": "Here, you dropped this.",
     "imagePath": "/cards/146.webp",
     "deckArtPath": "/deck-art/146.webp"
@@ -2705,10 +2714,10 @@ const OFFICIAL_CARDS = [
     "tribe": "Lubina",
     "type": "Goon",
     "cost": 2,
-    "power": 3,
-    "health": 1,
+    "power": 2,
+    "health": 4,
     "durability": null,
-    "ability": "Sidewinder. When this enters a lane, move a space forward. If the space is occupied, this jumps to the space in front of it.",
+    "ability": "Sidewinder. When this enters a lane, this moves a space forward, passing through enemy units.",
     "flavor": "Six-year time Goolympics champion, participating in every sport. Even the burger eating competitions!",
     "imagePath": "/cards/156.webp",
     "deckArtPath": "/deck-art/156.webp"
@@ -2755,9 +2764,9 @@ const OFFICIAL_CARDS = [
     "rarity": "Platinum",
     "tribe": "Lubina",
     "type": "Goon",
-    "cost": 7,
-    "power": 4,
-    "health": 6,
+    "cost": 8,
+    "power": 6,
+    "health": 7,
     "durability": null,
     "ability": "Sidewinder, Wardlocked. Units with Sidewinder will always switch to the next lane and when they do, they will have an extra movement and attack. Valor: When this deals damage, give a unit Sidewinder and +1/+1 until the end of combat.",
     "flavor": "The only language she speaks is dance.",
@@ -2844,7 +2853,7 @@ const OFFICIAL_CARDS = [
     "power": 2,
     "health": 2,
     "durability": null,
-    "ability": "Swarm 1. End of turn, this gets Swarm +1. Invader: Has Paywall 1.",
+    "ability": "Brawl, Swarm 1, Paywall 2 HP. End of turn, this gets Swarm +1 or Swarm -1 to create a Multiplying Morpho-blob in a space adjacent to this.",
     "flavor": "\"You can kill me, but can you kill AALLL of me's?\"",
     "imagePath": "/cards/164.webp",
     "deckArtPath": "/deck-art/164.webp"
@@ -3124,9 +3133,9 @@ const INITIAL_MATCH_STATE = {
   yieldRate: 2,
   players: [
     { id: 1, name: 'PLAYER 1', life: 20, gold: 2, hand: 4, counters: JSON.parse(JSON.stringify(DEFAULT_COUNTERS)) },
-    { id: 2, name: 'PLAYER 2', life: 20, gold: 2, hand: 5, counters: JSON.parse(JSON.stringify(DEFAULT_COUNTERS)) },
+    { id: 2, name: 'PLAYER 2', life: 20, gold: 2, hand: 4, counters: JSON.parse(JSON.stringify(DEFAULT_COUNTERS)) },
     { id: 3, name: 'PLAYER 3', life: 20, gold: 2, hand: 4, counters: JSON.parse(JSON.stringify(DEFAULT_COUNTERS)) },
-    { id: 4, name: 'PLAYER 4', life: 20, gold: 2, hand: 5, counters: JSON.parse(JSON.stringify(DEFAULT_COUNTERS)) },
+    { id: 4, name: 'PLAYER 4', life: 20, gold: 2, hand: 4, counters: JSON.parse(JSON.stringify(DEFAULT_COUNTERS)) },
   ]
 };
 
@@ -3260,30 +3269,29 @@ const KEYWORD_DEFINITIONS = {
   "Brawl": "This attacks simultaneously with the opposing unit instead of following combat order.",
   "Crossfire": "Can attack units in adjacent lanes.",
   "Trip": "When a unit steps or is played on top of this card, reveal it, trigger its ability, and remove 1 Durability.",
-  "Pay(Diamond)": "Pay one Diamond to activate this card’s additional ability.",
   "Celerity": "Always attacks first. If attacking another unit with Celerity, they both attack simultaneously instead.",
   "Cleave": "Damages all enemy units on the column in front, behind, and adjacent spaces here.",
   "Flame": "After this deals damage, create a Fire Trap token on the space they dealt damage on.",
   "Low Opacity": "This unit dies after attacking and dealing damage.",
   "Overkill": "All excess damage goes to the nearest enemy unit or opponent in the lane.",
-  "Poison": "After this deals damage to an enemy unit, at the end of combat, destroy it.",
-  "Sidewinder": "After attacking, this moves to the adjacent lane.",
+  "Poison": "After dealing damage to an enemy unit, at the end of combat, destroy it.",
+  "Sidewinder": "After dealing damage, this moves to the adjacent lane.",
   "Virus": "When this destroys a card, all other enemy units on its column and the one behind it get -X/-X. If there are no enemy units initially in that radius, then the opponent loses X health. Virus cannot trigger itself.",
   "Avian": "Cannot be blocked by non-Avian or non-Air Blocker Goons and Traps.",
   "Air Blocker": "Avian units can be attacked by this and they cannot pass through this.",
   "Boned": "Takes 1 less damage from all sources.",
-  "Everlasting": "Cannot be destroyed instantly by abilities.",
-  "Immobile": "Cannot be moved and cannot change lanes.",
-  "Paywall": "When an enemy targets this card with an ability, they must spend (X). If they do not, then they are forced to choose another target/the ability does not affect this card.",
+  "Everlasting": "Cannot be destroyed instantly by abilities or keywords.",
+  "Immobile": "Cannot move or change lanes.",
+  "Paywall": "If this is the target of an enemy ability, the opponent must spend (X). If they do not, then they are forced to choose another target as the ability will not affect this card.",
   "Revenge": "When damaged, this unit deals damage equal to its STR back.",
   "Taunt": "Enemy Goons, Towers, Tricks, and Trinkets must target this unit before targeting any other friendly unit or player behind this unit. Enemy Goons in adjacent lanes entering the same or previous column must attack the Taunt unit adjacently without changing lanes.",
-  "Wardlocked": "Untargetable by ALL other abilities (including your own).",
+  "Wardlocked": "Cannot be the specific target of ALL other abilities (including your own).",
   "Artillery": "Has infinite range but stats cannot be increased.",
-  "Nimble": "Moves an additional three spaces when played.",
+  "Nimble": "Moves an additional three spaces when played and will attack immediately if able.",
   "Sluggish": "Moves one space per turn.",
   "Stun": "Skip the next movement and attack.",
   "Stack": "This can share a space with another friendly unit.",
-  "Swarm": "Counts as X units instead of one and they can share the same space with each other. As they are separate units, any ability on the card can trigger for each unit, unless the ability refers to the entire card, then it only happens once (e.g. ‘when this card is played’ instead of ‘when played’).",
+  "Swarm": "Counts as X units instead of one and they can share the same space with each other. As they are separate units, any ability on the card can trigger for each unit, unless the ability refers to the entire card, then it only happens once (e.g. ‘when this card is played’ instead of ‘when played’). This also applies when targeting the card; if an ability refers to the entire 'card', then ",
   "Discard": "Remove a card from your hand and put it in the Gooraveyard.",
   "Dredge": "Draw the top card from the Gooraveyard.",
   "Recall": "Returns to the player's hand with base stats and cost.",
@@ -3292,7 +3300,7 @@ const KEYWORD_DEFINITIONS = {
   "Valor": "When this enters the Half-Line, it gains this extra ability. It is removed when they exit the Half-line.",
   "Imbue": "Instead of equipping this to a card on the board, it must be equipped while that card is in your hand.",
   "Overslimed": "This card must be played faced down and IF you are player 2, before the opponent’s turn. While face down, it is not a unit; it cannot be damaged, targeted, and does not block or attack. At the end of the opponent’s turn, reveal it. When revealed, it enters play normally.",
-  "Upgrade": "Additional ability activates when you spend (X) when playing this card.",
+  "Upgrade": "Additional ability activates when you spend an extra (X) playing this card.",
   "Banish": "This card is removed from the game and does not go to the Gooraveyard.",
   "Diamonds": "One diamond is equal to three gold. They can be spent instead of gold.",
   "Pay": "Additional ability activates when you spend (X) on this card during your turn.",
@@ -3438,17 +3446,6 @@ export default function App() {
   const [hoveredDeckCardTop, setHoveredDeckCardTop] = useState(0);
   const [deckViewerSortMode, setDeckViewerSortMode] = useState('deck');
   const [deckViewerSortDirection, setDeckViewerSortDirection] = useState('asc');
-  const [newsPosts, setNewsPosts] = useState([]);
-
-useEffect(() => {
-  fetch('/updates.json')
-    .then(response => {
-      if (!response.ok) throw new Error('Failed to load updates');
-      return response.json();
-    })
-    .then(data => setNewsPosts(data))
-    .catch(error => console.error('News loading error:', error));
-}, []);
 
   // Cards & Custom Cards State
   const [customCards, setCustomCards] = useState(() => {
@@ -3492,20 +3489,14 @@ useEffect(() => {
 
   const allCards = useMemo(() => [...OFFICIAL_CARDS, ...customCards], [customCards]);
   const tribeOrder = ['Blob', 'Goonger', 'Lubina', 'Mutant', 'Slobbant', 'Neutral'];
+  // Keep the source/database order by default. Tribe grouping is opt-in via All Tribes.
   const collectionCards = useMemo(() => [...OFFICIAL_CARDS, ...customCards]
     .map((card) => ({
       ...card,
       rarity: String(card.rarity || '').trim() === 'Aurum' ? 'Aureum' : String(card.rarity || '').trim(),
       type: String(card.type || '').trim(),
       tribe: String(card.tribe || '').trim(),
-    }))
-    .sort((a, b) => {
-      const ai = tribeOrder.indexOf(a.tribe) < 0 ? 99 : tribeOrder.indexOf(a.tribe);
-      const bi = tribeOrder.indexOf(b.tribe) < 0 ? 99 : tribeOrder.indexOf(b.tribe);
-      if (ai !== bi) return ai - bi;
-    
-  return (a.cardNumber || 9999) - (b.cardNumber || 9999) || a.name.localeCompare(b.name);
-    }), [customCards]);
+    })), [customCards]);
 
   // Decks State
   const [decks, setDecks] = useState(() => {
@@ -3535,6 +3526,7 @@ useEffect(() => {
   // Collection Filters & UI State
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFactions, setSelectedFactions] = useState([]);
+  const [groupAllTribes, setGroupAllTribes] = useState(false);
   const [typeFilter, setTypeFilter] = useState('ALL');
   const [sortMode, setSortMode] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
@@ -3694,6 +3686,7 @@ useEffect(() => {
   // ============================================================================
 
   const toggleFactionFilter = (factionId) => {
+    setGroupAllTribes(false);
     setSelectedFactions((prev) => {
       if (prev.includes(factionId)) return prev.filter((id) => id !== factionId);
       if (factionId === 'gray') return [...prev, factionId];
@@ -3723,9 +3716,8 @@ useEffect(() => {
       }
       return true;
     }).sort((a, b) => {
-      // With a specific tribe selection, keep tribe grouping. "All Tribes"
-      // sorts the entire roster globally so costs/rarities are not split by tribe.
-      if (selectedFactions.length > 0) {
+      // All Tribes is opt-in. Apply the selected sort inside each tribe.
+      if (groupAllTribes) {
         const tribeA = tribeOrder.indexOf(a.tribe);
         const tribeB = tribeOrder.indexOf(b.tribe);
         const rankA = tribeA < 0 ? 99 : tribeA;
@@ -3743,9 +3735,14 @@ useEffect(() => {
       }
 
       if (comparison !== 0) return sortDirection === 'desc' ? -comparison : comparison;
-      return (a.cardNumber || 9999) - (b.cardNumber || 9999) || String(a.name || '').localeCompare(String(b.name || ''));
+      // Preserve the original card-sheet order unless a sort or tribe grouping is active.
+      if (sortMode || groupAllTribes) {
+        return (a.cardNumber || 9999) - (b.cardNumber || 9999)
+          || String(a.name || '').localeCompare(String(b.name || ''));
+      }
+      return 0;
     });
-  }, [collectionCards, selectedFactions, typeFilter, searchQuery, sortMode, sortDirection]);
+  }, [collectionCards, selectedFactions, typeFilter, searchQuery, sortMode, sortDirection, groupAllTribes]);
 
   const totalCardsInDeck = useMemo(() => {
     return Object.values(activeDeck.cards || {}).reduce((sum, count) => sum + count, 0);
@@ -4122,7 +4119,7 @@ useEffect(() => {
   };
   const inspectedCardList = activeView === 'deckOverview'
     ? deckViewerCards.map(({ card }) => card)
-    : collectionCards;
+    : filteredCards;
   const inspectedIndex = inspectedCard ? inspectedCardList.findIndex((card) => card.id === inspectedCard.id) : -1;
   const navigateInspectedCard = (direction) => {
     if (!inspectedCardList.length || inspectedIndex < 0) return;
@@ -4220,10 +4217,13 @@ useEffect(() => {
               <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
                 <button
                   type="button"
-                  onClick={() => setSelectedFactions([])}
-                  aria-pressed={selectedFactions.length === 0}
+                  onClick={() => {
+                    setSelectedFactions([]);
+                    setGroupAllTribes((previous) => !previous);
+                  }}
+                  aria-pressed={groupAllTribes}
                   className={`px-3 h-10 sm:h-11 rounded-2xl border-2 text-xs sm:text-sm font-black transition cursor-pointer ${
-                    selectedFactions.length === 0
+                    groupAllTribes
                       ? 'bg-yellow-400 border-yellow-300 text-zinc-950'
                       : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'
                   }`}
@@ -4588,7 +4588,7 @@ useEffect(() => {
                 </div>
 
                 {/* Bottom Card Counter Pill (7/30 CARDS) & Quick Deck Actions */}
-                <div className="pt-3 mt-2 pb-20 border-t border-zinc-800 space-y-2">
+                <div className="pt-3 mt-2 border-t border-zinc-800 space-y-2">
                   <div
                     className={`w-full py-2.5 px-4 rounded-2xl border-2 flex items-center justify-center gap-2 font-black text-xl tracking-wide transition ${
                       totalCardsInDeck === 30
@@ -5081,6 +5081,21 @@ useEffect(() => {
 
                 {inspectedCard.flavor && <p className="border-t border-zinc-200 pt-3 text-sm italic text-zinc-600">{inspectedCard.flavor}</p>}
 
+                <section className="border-t-2 border-zinc-200 pt-3 space-y-2" aria-label="Card rulings">
+                  <h3 className="text-sm font-black uppercase tracking-wider text-zinc-700">Rulings</h3>
+                  {(() => {
+                    const ruling = CARD_RULINGS[inspectedCard.id];
+                    const entries = Array.isArray(ruling) ? ruling : ruling ? [ruling] : [];
+                    return entries.length > 0 ? (
+                      <ul className="list-disc pl-5 space-y-1 text-sm leading-relaxed text-zinc-800">
+                        {entries.map((entry, index) => <li key={`${inspectedCard.id}-ruling-${index}`}>{entry}</li>)}
+                      </ul>
+                    ) : (
+                      <p className="text-sm italic text-zinc-500">No rulings have been added for this card yet.</p>
+                    );
+                  })()}
+                </section>
+
                 <div className="border-t border-zinc-200 pt-3 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
                   <span className="text-zinc-600">Illustrated by <strong className="text-zinc-950">Fahoodz (Fahad Al Marzooqi)</strong></span>
                   <strong className="uppercase tracking-wide text-zinc-900">{inspectedCard.rarity}</strong>
@@ -5272,13 +5287,13 @@ useEffect(() => {
               <h1 className="mt-1 text-3xl sm:text-4xl font-black text-white">News & Updates</h1>
               <p className="mt-2 text-zinc-400">Announcements, balance changes, new cards, and app updates.</p>
             </div>
-            {newsPosts.length ? (
+            {NEWS_POSTS.length ? (
               <div className="space-y-4">
-                {newsPosts.map((post) => (
+                {NEWS_POSTS.map((post) => (
                   <article key={post.id} className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 sm:p-7">
                     <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-yellow-400"><span>{post.category || 'Announcement'}</span><span className="text-zinc-600">•</span><time>{post.date}</time></div>
                     <h2 className="mt-3 text-2xl font-black text-white">{post.title}</h2>
-                    <p className="mt-3 text-zinc-300 leading-relaxed whitespace-pre-line">{post.description}</p>
+                    <p className="mt-3 text-zinc-300 leading-relaxed whitespace-pre-line">{post.body}</p>
                   </article>
                 ))}
               </div>
