@@ -4608,7 +4608,7 @@ export default function App() {
             </button>
 
             {sidebarOpen ? (
-              <div className="flex-1 flex flex-col h-full pt-14 lg:pt-3 p-4 overflow-hidden">
+              <div className="flex-1 flex flex-col h-full pt-14 lg:pt-3 p-4 pb-24 overflow-hidden">
                 {/* Top Row: "Go to decks" button & Active Faction Icons */}
                 <div className="flex items-center justify-between gap-2 mb-3">
                   <button
@@ -4795,7 +4795,7 @@ export default function App() {
           {/* Mobile Floating Deck Toggle Button */}
           <button
             onClick={() => setSidebarOpen((prev) => !prev)}
-            className="lg:hidden fixed bottom-4 right-4 z-40 flex items-center gap-2 bg-yellow-400 text-zinc-950 font-black px-4 py-3 rounded-full shadow-2xl border-2 border-zinc-950 cursor-pointer"
+            className="lg:hidden fixed bottom-20 right-4 z-40 flex items-center gap-2 bg-yellow-400 text-zinc-950 font-black px-4 py-3 rounded-full shadow-2xl border-2 border-zinc-950 cursor-pointer"
           >
             <Layers className="w-5 h-5" />
             <span>Deck ({totalCardsInDeck}/30)</span>
