@@ -3291,7 +3291,7 @@ const KEYWORD_DEFINITIONS = {
   "Sluggish": "Moves one space per turn.",
   "Stun": "Skip the next movement and attack.",
   "Stack": "This can share a space with another friendly unit.",
-  "Swarm": "Counts as X units instead of one and they can share the same space with each other. As they are separate units, any ability on the card can trigger for each unit, unless the ability refers to the entire card, then it only happens once (e.g. ‘when this card is played’ instead of ‘when played’). This also applies when targeting the card; if an ability refers to the entire 'card', then ",
+  "Swarm": "Counts as X units instead of one and they can share the same space with each other. As they are separate units, any ability on the card can trigger for each unit, unless the ability refers to the entire card, then it only happens once (e.g. ‘when this card is played’ instead of ‘when played’). This also applies when targeting the card; if an ability refers to the entire 'card', then all units will be affected.",
   "Discard": "Remove a card from your hand and put it in the Gooraveyard.",
   "Dredge": "Draw the top card from the Gooraveyard.",
   "Recall": "Returns to the player's hand with base stats and cost.",
@@ -3549,7 +3549,7 @@ export default function App() {
     const fixedTerms = [...Object.keys(KEYWORD_DEFINITIONS), ...Object.keys(keywordAliases)]
       .filter((term) => !['Virus', 'Paywall', 'Swarm', 'Upgrade', 'Pay', 'Diamonds'].includes(term))
       .sort((a, b) => b.length - a.length);
-    const dynamicPattern = '(?:Paywall|Virus|Swarm|Upgrade|Pay)\\s*(?:\\(\\s*\\d+\\s*\\)|\\d+)';
+    const dynamicPattern = '(?:Paywall\\s*(?:\\(\\s*\\d+\\s*\\)|\\d+)(?:\\s+HP)?|(?:Virus|Swarm|Upgrade|Pay)\\s*(?:\\(\\s*\\d+\\s*\\)|\\d+))';
     const relatedTerms = Object.keys(relatedForCard).sort((a, b) => b.length - a.length);
     const resourceTerms = ['Diamonds', 'Diamond'];
     const escapeRegex = (term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -3560,7 +3560,7 @@ export default function App() {
       if (/^diamonds?$/i.test(part)) {
         return <button key={index} type="button" onClick={(e) => { e.stopPropagation(); setKeywordHelp((prev) => prev?.name === 'Diamonds' ? null : { name: 'Diamonds', description: KEYWORD_DEFINITIONS.Diamonds }); }} className="keyword-trigger font-black underline decoration-dotted underline-offset-2 text-black hover:text-zinc-700">{part}</button>;
       }
-      const dynamicMatch = part.match(/^(Paywall|Virus|Swarm|Upgrade|Pay)\s*\(?\s*(\d+)\s*\)?$/i);
+      const dynamicMatch = part.match(/^(Paywall|Virus|Swarm|Upgrade|Pay)\s*\(?\s*(\d+)\s*\)?(?:\s+(HP))?$/i);
       let canonical = Object.keys(KEYWORD_DEFINITIONS).find((term) => term.toLowerCase() === part.toLowerCase()) || keywordAliases[part] || Object.entries(keywordAliases).find(([alias]) => alias.toLowerCase() === part.toLowerCase())?.[1];
       let value = null;
       if (dynamicMatch) {
