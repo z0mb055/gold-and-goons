@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { supabase } from './supabaseClient';
 import {
   Search,
   ChevronRight,
@@ -3442,6 +3443,138 @@ const NEWS_POSTS = [
 export default function App() {
   // Main screens: collection/deck builder, saved deck library, full deck overview, tracker, news.
   const [activeView, setActiveView] = useState('collection');
+  // Supabase-backed rulings and news. Only users listed in admin_users can edit.
+  const [contentEntries, setContentEntries] = useState([]);
+  const [adminSession, setAdminSession] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminPanelOpen, setAdminPanelOpen] = useState(false);
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminAuthMessage, setAdminAuthMessage] = useState('');
+  const [contentForm, setContentForm] = useState({
+    kind: 'ruling', card_id: '', title: '', category: 'General ruling',
+    game_mode: '', body: '', published: true
+  });
+  const [editingContentId, setEditingContentId] = useState(null);
+  const [contentSaveMessage, setContentSaveMessage] = useState('');
+  const [contentBusy, setContentBusy] = useState(false);
+
+  const loadContentEntries = async () => {
+    const { data, error } = await supabase
+      .from('game_content')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('Could not load Gold & Goons rulings/news:', error);
+      return;
+    }
+    setContentEntries(data || []);
+  };
+
+  useEffect(() => {
+    let alive = true;
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!alive) return;
+      setAdminSession(session);
+      if (session?.user) {
+        const { data: adminResult } = await supabase.rpc('is_goldex_admin');
+        if (alive) setIsAdmin(Boolean(adminResult));
+      } else {
+        setIsAdmin(false);
+      }
+      if (alive) loadContentEntries();
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAdminSession(session);
+      if (!session?.user) {
+        setIsAdmin(false);
+        loadContentEntries();
+      } else {
+        // Defer the RPC until after the auth event callback has completed.
+        setTimeout(async () => {
+          const { data: adminResult } = await supabase.rpc('is_goldex_admin');
+          setIsAdmin(Boolean(adminResult));
+          loadContentEntries();
+        }, 0);
+      }
+    });
+    return () => {
+      alive = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const signInGoldexAdmin = async (event) => {
+    event.preventDefault();
+    setAdminAuthMessage('');
+    const { error } = await supabase.auth.signInWithPassword({
+      email: adminEmail.trim(), password: adminPassword
+    });
+    if (error) setAdminAuthMessage(error.message);
+    else {
+      setAdminPassword('');
+      setAdminAuthMessage('Signed in. Checking administrator access…');
+    }
+  };
+
+  const signOutGoldexAdmin = async () => {
+    await supabase.auth.signOut();
+    setAdminPanelOpen(false);
+    setIsAdmin(false);
+  };
+
+  const saveContentEntry = async (event) => {
+    event.preventDefault();
+    if (!isAdmin) return;
+    setContentBusy(true);
+    setContentSaveMessage('');
+    const payload = {
+      kind: contentForm.kind,
+      card_id: contentForm.kind === 'ruling' ? contentForm.card_id : null,
+      title: contentForm.title.trim(),
+      category: contentForm.category,
+      game_mode: contentForm.game_mode.trim() || null,
+      body: contentForm.body.trim(),
+      published: Boolean(contentForm.published)
+    };
+    const query = editingContentId
+      ? supabase.from('game_content').update(payload).eq('id', editingContentId)
+      : supabase.from('game_content').insert(payload);
+    const { error } = await query;
+    setContentBusy(false);
+    if (error) {
+      setContentSaveMessage(error.message);
+      return;
+    }
+    setContentSaveMessage(payload.published ? 'Published successfully.' : 'Draft saved.');
+    setEditingContentId(null);
+    setContentForm({
+      kind: 'ruling', card_id: '', title: '', category: 'General ruling',
+      game_mode: '', body: '', published: true
+    });
+    await loadContentEntries();
+  };
+
+  const editContentEntry = (entry) => {
+    setEditingContentId(entry.id);
+    setContentForm({
+      kind: entry.kind, card_id: entry.card_id || '', title: entry.title || '',
+      category: entry.category || 'General ruling', game_mode: entry.game_mode || '',
+      body: entry.body || '', published: Boolean(entry.published)
+    });
+    setContentSaveMessage('');
+    setAdminPanelOpen(true);
+  };
+
+  const deleteContentEntry = async (entryId) => {
+    if (!isAdmin || !window.confirm('Delete this item permanently?')) return;
+    const { error } = await supabase.from('game_content').delete().eq('id', entryId);
+    if (error) setContentSaveMessage(error.message);
+    else {
+      setContentSaveMessage('Item deleted.');
+      await loadContentEntries();
+    }
+  };
   const [hoveredDeckCardId, setHoveredDeckCardId] = useState(null);
   const [hoveredDeckCardTop, setHoveredDeckCardTop] = useState(0);
   const [deckViewerSortMode, setDeckViewerSortMode] = useState('deck');
@@ -5081,18 +5214,21 @@ export default function App() {
 
                 {inspectedCard.flavor && <p className="border-t border-zinc-200 pt-3 text-sm italic text-zinc-600">{inspectedCard.flavor}</p>}
 
-                <section className="border-t-2 border-zinc-200 pt-3 space-y-2" aria-label="Card rulings">
-                  <h3 className="text-sm font-black uppercase tracking-wider text-zinc-700">Rulings</h3>
+                <section className="border-t-2 border-zinc-200 pt-3 space-y-3" aria-label="Card rulings">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-sm font-black uppercase tracking-wider text-zinc-700">Rulings & Clarifications</h3>
+                    {isAdmin && <button type="button" onClick={() => { setContentForm({ kind: 'ruling', card_id: inspectedCard.id, title: '', category: 'General ruling', game_mode: '', body: '', published: true }); setEditingContentId(null); setInspectedCard(null); setActiveView('news'); setAdminPanelOpen(true); }} className="text-xs font-bold text-yellow-700 hover:text-yellow-900">+ Add ruling</button>}
+                  </div>
                   {(() => {
-                    const ruling = CARD_RULINGS[inspectedCard.id];
-                    const entries = Array.isArray(ruling) ? ruling : ruling ? [ruling] : [];
-                    return entries.length > 0 ? (
-                      <ul className="list-disc pl-5 space-y-1 text-sm leading-relaxed text-zinc-800">
-                        {entries.map((entry, index) => <li key={`${inspectedCard.id}-ruling-${index}`}>{entry}</li>)}
-                      </ul>
-                    ) : (
-                      <p className="text-sm italic text-zinc-500">No rulings have been added for this card yet.</p>
-                    );
+                    const liveEntries = contentEntries.filter((entry) => entry.kind === 'ruling' && entry.card_id === inspectedCard.id && (entry.published || isAdmin));
+                    const fallback = CARD_RULINGS[inspectedCard.id];
+                    const fallbackEntries = Array.isArray(fallback) ? fallback : fallback ? [fallback] : [];
+                    return liveEntries.length || fallbackEntries.length ? (
+                      <div className="space-y-3">
+                        {liveEntries.map((entry) => <article key={entry.id} className="rounded-xl border border-amber-200 bg-amber-50 p-3 space-y-1"><div className="flex flex-wrap items-center gap-2 text-[11px] font-black uppercase tracking-wide text-amber-800"><span>{entry.category || 'General ruling'}</span>{entry.game_mode && <span>· {entry.game_mode}</span>}{!entry.published && <span className="text-red-700">· Draft (admin only)</span>}</div>{entry.title && <h4 className="font-black text-zinc-900">{entry.title}</h4>}<p className="text-sm leading-relaxed text-zinc-800 whitespace-pre-line">{entry.body}</p></article>)}
+                        {fallbackEntries.map((entry, index) => <p key={`${inspectedCard.id}-legacy-ruling-${index}`} className="text-sm leading-relaxed text-zinc-800">{entry}</p>)}
+                      </div>
+                    ) : <p className="text-sm italic text-zinc-500">No rulings have been added for this card yet.</p>;
                   })()}
                 </section>
 
@@ -5278,21 +5414,113 @@ export default function App() {
         </main>
       )}
 
-      {/* News & Updates: posts are authored in the NEWS_POSTS constant above. */}
+      {/* News & Updates: public patch notes live here; card rulings appear in each card's detail view. */}
       {activeView === 'news' && (
         <main className="flex-1 min-h-0 overflow-y-auto bg-zinc-950">
           <div className="max-w-5xl mx-auto p-5 sm:p-8 space-y-6">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.25em] text-yellow-400">Gold & Goons</p>
-              <h1 className="mt-1 text-3xl sm:text-4xl font-black text-white">News & Updates</h1>
-              <p className="mt-2 text-zinc-400">Announcements, balance changes, new cards, and app updates.</p>
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.25em] text-yellow-400">Gold & Goons</p>
+                <h1 className="mt-1 text-3xl sm:text-4xl font-black text-white">News & Updates</h1>
+                <p className="mt-2 text-zinc-400">Patch notes, balance changes, announcements, and app updates.</p>
+              </div>
+              <button type="button" onClick={() => setAdminPanelOpen((open) => !open)} className="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2.5 text-sm font-black text-yellow-300 hover:border-yellow-400">
+                {isAdmin ? (adminPanelOpen ? 'Close Admin Dashboard' : 'Admin Dashboard') : 'Admin Sign In'}
+              </button>
             </div>
-            {NEWS_POSTS.length ? (
+
+            {adminPanelOpen && (
+              <section className="rounded-3xl border-2 border-yellow-500/40 bg-zinc-900 p-5 sm:p-7 space-y-5">
+                {!isAdmin ? (
+                  <form onSubmit={signInGoldexAdmin} className="max-w-md space-y-3">
+                    <div>
+                      <h2 className="text-xl font-black text-white">Private Goldex Admin</h2>
+                      <p className="mt-1 text-sm text-zinc-400">Sign in with the administrator account configured in Supabase.</p>
+                    </div>
+                    <input type="email" required value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} placeholder="Admin email" className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-white" />
+                    <input type="password" required value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} placeholder="Password" className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-white" />
+                    <button disabled={contentBusy} className="rounded-xl bg-yellow-400 px-5 py-3 font-black text-zinc-950 disabled:opacity-50">Sign In</button>
+                    {adminAuthMessage && <p className="text-sm text-amber-300">{adminAuthMessage}</p>}
+                  </form>
+                ) : (
+                  <>
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <h2 className="text-xl font-black text-white">Admin Dashboard</h2>
+                        <p className="text-xs text-zinc-400">Signed in as {adminSession?.user?.email}. Only approved admin accounts can publish or edit.</p>
+                      </div>
+                      <button type="button" onClick={signOutGoldexAdmin} className="rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-300">Sign Out</button>
+                    </div>
+                    <form onSubmit={saveContentEntry} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <label className="text-xs font-bold text-zinc-400">Content type
+                        <select value={contentForm.kind} onChange={(e) => setContentForm((f) => ({ ...f, kind: e.target.value, card_id: e.target.value === 'news' ? '' : f.card_id, category: e.target.value === 'news' ? 'Patch Notes' : 'General ruling' }))} className="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-white">
+                          <option value="ruling">Card ruling (shown in card details)</option>
+                          <option value="news">Patch note / News (shown in News & Updates)</option>
+                        </select>
+                      </label>
+                      {contentForm.kind === 'ruling' && (
+                        <label className="text-xs font-bold text-zinc-400">Card
+                          <select required value={contentForm.card_id} onChange={(e) => setContentForm((f) => ({ ...f, card_id: e.target.value }))} className="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-white">
+                            <option value="">Choose a card…</option>
+                            {allCards.slice().sort((a,b) => a.name.localeCompare(b.name)).map((card) => <option key={card.id} value={card.id}>{card.name}</option>)}
+                          </select>
+                        </label>
+                      )}
+                      <label className="text-xs font-bold text-zinc-400">Title
+                        <input value={contentForm.title} onChange={(e) => setContentForm((f) => ({ ...f, title: e.target.value }))} placeholder={contentForm.kind === 'ruling' ? 'e.g. Damage timing clarification' : 'e.g. November balance update'} className="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-white" />
+                      </label>
+                      <label className="text-xs font-bold text-zinc-400">Category
+                        <select value={contentForm.category} onChange={(e) => setContentForm((f) => ({ ...f, category: e.target.value }))} className="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-white">
+                          {(contentForm.kind === 'ruling' ? ['General ruling', 'Timing', 'Interaction', 'Game mode', 'Edge case'] : ['Patch Notes', 'Balance Update', 'New Cards', 'Announcement', 'App Update']).map((value) => <option key={value}>{value}</option>)}
+                        </select>
+                      </label>
+                      {contentForm.kind === 'ruling' && (
+                        <label className="text-xs font-bold text-zinc-400">Game mode (optional)
+                          <input value={contentForm.game_mode} onChange={(e) => setContentForm((f) => ({ ...f, game_mode: e.target.value }))} placeholder="e.g. 1v1, 4-player, Tournament" className="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-white" />
+                        </label>
+                      )}
+                      <label className="sm:col-span-2 text-xs font-bold text-zinc-400">Details
+                        <textarea required rows={5} value={contentForm.body} onChange={(e) => setContentForm((f) => ({ ...f, body: e.target.value }))} placeholder={contentForm.kind === 'ruling' ? 'Explain the ruling, examples, interactions, and edge cases…' : 'Write the patch notes or update details…'} className="mt-1 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-3 text-white" />
+                      </label>
+                      <label className="sm:col-span-2 flex items-center gap-2 text-sm font-bold text-zinc-300">
+                        <input type="checkbox" checked={contentForm.published} onChange={(e) => setContentForm((f) => ({ ...f, published: e.target.checked }))} />
+                        Publish immediately (untick to save as a private draft)
+                      </label>
+                      <div className="sm:col-span-2 flex flex-wrap gap-2">
+                        <button disabled={contentBusy} className="rounded-xl bg-yellow-400 px-5 py-3 font-black text-zinc-950 disabled:opacity-50">{contentBusy ? 'Saving…' : editingContentId ? 'Save Changes' : contentForm.published ? 'Publish' : 'Save Draft'}</button>
+                        {editingContentId && <button type="button" onClick={() => { setEditingContentId(null); setContentForm({ kind: 'ruling', card_id: '', title: '', category: 'General ruling', game_mode: '', body: '', published: true }); }} className="rounded-xl border border-zinc-700 px-4 py-3 font-bold text-zinc-300">Cancel Edit</button>}
+                      </div>
+                      {contentSaveMessage && <p className="sm:col-span-2 text-sm text-amber-300">{contentSaveMessage}</p>}
+                    </form>
+
+                    <div className="border-t border-zinc-800 pt-4 space-y-3">
+                      <h3 className="font-black text-white">Manage content ({contentEntries.length})</h3>
+                      {contentEntries.length ? contentEntries.map((entry) => {
+                        const linkedCard = allCards.find((card) => card.id === entry.card_id);
+                        return <div key={entry.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-zinc-800 bg-zinc-950 p-3">
+                          <div className="min-w-0">
+                            <p className="font-bold text-white">{entry.kind === 'ruling' ? `Ruling · ${linkedCard?.name || 'Unknown card'}` : 'News · ' + (entry.category || 'Update')}</p>
+                            <p className="text-sm text-zinc-300">{entry.title || entry.body?.slice(0, 90)}</p>
+                            <p className="text-[11px] uppercase tracking-wide text-zinc-500">{entry.published ? 'Published' : 'Draft'} · {entry.created_at ? new Date(entry.created_at).toLocaleDateString() : ''}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <button type="button" onClick={() => editContentEntry(entry)} className="rounded-lg border border-zinc-700 px-3 py-2 text-xs font-bold text-yellow-300">Edit</button>
+                            <button type="button" onClick={() => deleteContentEntry(entry.id)} className="rounded-lg border border-red-900 px-3 py-2 text-xs font-bold text-red-300">Delete</button>
+                          </div>
+                        </div>;
+                      }) : <p className="text-sm text-zinc-500">No rulings or news entries yet.</p>}
+                    </div>
+                  </>
+                )}
+              </section>
+            )}
+
+            {contentEntries.filter((entry) => entry.kind === 'news' && entry.published).length ? (
               <div className="space-y-4">
-                {NEWS_POSTS.map((post) => (
+                {contentEntries.filter((entry) => entry.kind === 'news' && entry.published).map((post) => (
                   <article key={post.id} className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 sm:p-7">
-                    <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-yellow-400"><span>{post.category || 'Announcement'}</span><span className="text-zinc-600">•</span><time>{post.date}</time></div>
-                    <h2 className="mt-3 text-2xl font-black text-white">{post.title}</h2>
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-yellow-400"><span>{post.category || 'Announcement'}</span><span className="text-zinc-600">•</span><time>{new Date(post.created_at).toLocaleDateString()}</time></div>
+                    {post.title && <h2 className="mt-3 text-2xl font-black text-white">{post.title}</h2>}
                     <p className="mt-3 text-zinc-300 leading-relaxed whitespace-pre-line">{post.body}</p>
                   </article>
                 ))}
