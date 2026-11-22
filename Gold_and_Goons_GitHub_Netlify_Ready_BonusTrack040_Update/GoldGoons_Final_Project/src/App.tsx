@@ -1886,7 +1886,7 @@ const OFFICIAL_CARDS = [
     "power": null,
     "health": null,
     "durability": 3,
-    "ability": "Trip: Deal 1 damage to ALL units on this side and the opponent. If there are no enemy units on this side, deal 3 damage to the opponent instead.",
+    "ability": "Air Blocker. Trip: Deal 1 damage to ALL units on this side and the opponent. If there are no enemy units on this side, deal 3 damage to the opponent instead.",
     "flavor": "This is when Goons who don't have footwear regret their choices.",
     "imagePath": "/cards/107.webp",
     "deckArtPath": "/deck-art/107.webp"
