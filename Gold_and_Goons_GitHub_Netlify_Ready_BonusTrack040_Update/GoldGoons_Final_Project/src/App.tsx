@@ -20,6 +20,8 @@ import {
   Layers,
   Swords,
   BookOpen,
+  Layers3,
+  Megaphone,
   Download,
   Upload,
   X,
@@ -52,6 +54,66 @@ const FACTIONS = [
 const CARD_RULINGS = {
   // 'gg-card-025': ['Example ruling for a specific game mode.'],
 };
+
+// Gold & Goons rules reference. Kept here so the How to Play guide and glossary
+// remain available to every visitor without relying on a remote content request.
+const KEYWORD_GLOSSARY = [
+  { title: 'Damage Keywords', items: [
+    ['Brawl', 'This attacks simultaneously with the opposing unit instead of following combat order.'],
+    ['Celerity', 'Always attacks first. If attacking another unit with Celerity, they both attack simultaneously instead.'],
+    ['Cleave', 'Damages all enemy units on the column in front, behind, and adjacent spaces here.'],
+    ['Crossfire', 'Can attack targets in adjacent lanes.'],
+    ['Flame', 'After this deals damage, create a Fire Trap token with 2 durability that reads “Air Blocker. End of combat, trigger this to deal 1 damage to EVERYTHING on this space” in the space in front. This can create the Fire Trap on the player space if and only if it damages that player.'],
+    ['Low Opacity', 'This unit dies after attacking and dealing damage.'],
+    ['Overkill', 'All excess damage goes to the nearest enemy unit or opponent in the lane.'],
+    ['Poison', 'After this deals damage to an enemy unit, at the end of combat, destroy it.'],
+    ['Sidewinder', 'After dealing damage, this moves to the adjacent lane.'],
+    ['Virus X', 'When this destroys a card, all other enemy units on its column and the one behind it get -X/-X. If there are no enemy units initially in that radius, then the opponent loses X health. Virus cannot trigger itself.'],
+  ]},
+  { title: 'Health Keywords', items: [
+    ['Avian', 'Cannot be blocked by non-Avian or non-Air Blocker Goons and Traps. Enemy ground Goons will pass through this, cannot be attacked by them, and Traps will not be triggered by this.'],
+    ['Air Blocker', 'Avian units can be attacked by this and they cannot pass through this.'],
+    ['Boned', 'Takes 1 less damage from all sources.'],
+    ['Everlasting', 'Cannot be destroyed by lethal damage from abilities or keywords and “destroy” effects.'],
+    ['Paywall(X)', 'When an enemy targets this card with an ability, they must spend (X). If they do not, then they are forced to choose another target/the ability does not affect this card.'],
+    ['Revenge', 'When damaged, this unit deals damage equal to its STR back.'],
+    ['Taunt', 'Enemy Goons, Towers, Tricks, and Trinkets must target this unit before targeting any other friendly unit or player behind this unit. Enemy Goons in adjacent lanes entering the same or previous column must attack the Taunt unit without changing lanes.'],
+    ['Wardlocked', 'Cannot be the specific target of ALL other abilities (including your own).'],
+  ]},
+  { title: 'Range Keywords', items: [ ['Artillery', 'Has infinite range but stats cannot be increased.'] ] },
+  { title: 'Speed Keywords', items: [
+    ['Groggy', 'Does not move when played and always attacks last. If attacking another unit with Groggy, they both attack simultaneously.'],
+    ['Nimble', 'Moves an additional three spaces when played and attacks immediately if able.'],
+    ['Sluggish', 'Moves one space per turn.'],
+    ['Stun', 'Skip the next movement and attack.'],
+  ]},
+  { title: 'Miscellaneous Keywords', items: [
+    ['Stack', 'This can share a space with another friendly unit.'],
+    ['Swarm X', 'Counts as X units instead of one and they can share the same space with each other. As they are separate units, any ability on the card can trigger for each unit, unless the ability refers to the entire card, then it only happens once (e.g. “when this card is played” instead of “when played”).'],
+  ]},
+  { title: 'Drawing Terms', items: [
+    ['Discard', 'Remove a card from your hand to the Gooraveyard.'],
+    ['Dredge', 'Draw the top card from the Gooraveyard.'],
+    ['Recall', 'Returns to the player’s hand with base stats and cost.'],
+    ['Recycle', 'Put the top card of your deck to the Gooraveyard.'],
+  ]},
+  { title: 'Side Terms', items: [
+    ['Invader', 'When this enters the opponent’s side, it gains this extra ability. It is removed when they exit the side.'],
+    ['Valor', 'When this enters the Half-Line, it gains this extra ability. It is removed when they exit the Half-Line.'],
+  ]},
+  { title: '“When Played” Terms', items: [
+    ['Imbue', 'Instead of equipping this to a card on the board, it must be equipped while that card is in your hand.'],
+    ['Overslimed', 'This card must be played faced down and IF you are player 2, before the opponent’s turn. While face down, it is not a unit; it cannot be damaged, targeted, and does not block or attack. At the end of the opponent’s turn, reveal it. When revealed, it enters play normally.'],
+    ['Upgrade(X)', 'Additional ability activates when you spend an additional (X) playing this card.'],
+  ]},
+  { title: 'Miscellaneous Terms', items: [
+    ['Banish', 'This card is removed from the game and does not go to the Gooraveyard.'],
+    ['Diamonds', 'One diamond is equal to three gold. They can be spent instead of gold.'],
+    ['Pay(X)', 'Additional ability activates when you spend (X) on this card during your turn.'],
+    ['Sacrifice', 'Any act of killing your own cards is considered a sacrifice.'],
+    ['Trip', 'When a unit steps or is played on top of this card, reveal it, trigger its ability, and remove 1 Durability.'],
+  ]},
+];
 
 // Official 180-card database generated from the supplied Gold & Goons card sheet.
 const OFFICIAL_CARDS = [
@@ -1180,17 +1242,17 @@ const OFFICIAL_CARDS = [
   {
     "id": "gg-card-067",
     "cardNumber": 67,
-    "name": "Smite",
+    "name": "Dr. Heal Hammer",
     "faction": "yellow",
     "rarity": "Aureum",
     "tribe": "Goonger",
     "type": "Trick",
-    "cost": 3,
+    "cost": 2,
     "power": null,
     "health": null,
     "durability": null,
-    "ability": "Destroy a unit with 4 or more strength. Heal yourself by 3.",
-    "flavor": "Even the strongest of souls must receive judgement.",
+    "ability": "Heal yourself by 3 and increase your maximum health by 3 (without adding health) OR give a Tower +0/+2 and +2 Lifetime Draw a card.",
+    "flavor": "Who knew bashing at things makes them better? Dr. H didn't, he was just lucky.",
     "imagePath": "/cards/066.webp",
     "deckArtPath": "/deck-art/066.webp"
   },
@@ -1886,7 +1948,7 @@ const OFFICIAL_CARDS = [
     "power": null,
     "health": null,
     "durability": 3,
-    "ability": "Air Blocker. Trip: Deal 1 damage to ALL units on this side and the opponent. If there are no enemy units on this side, deal 3 damage to the opponent instead.",
+    "ability": "Trip: Deal 1 damage to the opponent and two other enemy units. If there are no other enemy units, then damage the opponent again.",
     "flavor": "This is when Goons who don't have footwear regret their choices.",
     "imagePath": "/cards/107.webp",
     "deckArtPath": "/deck-art/107.webp"
@@ -2905,7 +2967,7 @@ const OFFICIAL_CARDS = [
     "power": null,
     "health": null,
     "durability": 2,
-    "ability": "Air Blocker. When a non-Zombie unit dies on this Trap, Trigger it. When triggered, create a Zombie copy of that unit with Low Opacity under your control. You may Pay (3) when this would be Triggered to remove Low Opacity from the Zombie.",
+    "ability": "When a non-Zombie unit dies on this Trap, Trigger it. When triggered, create a Zombie copy of that unit with Low Opacity under your control. You may Pay (3) when this would be Triggered to remove Low Opacity from the Zombie.",
     "flavor": "Couldn't have died in a better place, right?",
     "imagePath": "/cards/167.webp",
     "deckArtPath": "/deck-art/167.webp"
@@ -3442,7 +3504,9 @@ const NEWS_POSTS = [
 
 export default function App() {
   // Main screens: collection/deck builder, saved deck library, full deck overview, tracker, news.
-  const [activeView, setActiveView] = useState('collection');
+  const [activeView, setActiveView] = useState('howToPlay');
+  const [guideCombatMode, setGuideCombatMode] = useState('normal');
+  const [selectedGuideTribe, setSelectedGuideTribe] = useState(null);
   // Supabase-backed rulings and news. Only users listed in admin_users can edit.
   const [contentEntries, setContentEntries] = useState([]);
   const [adminSession, setAdminSession] = useState(null);
@@ -4260,6 +4324,71 @@ export default function App() {
     if (nextIndex >= 0 && nextIndex < inspectedCardList.length) setInspectedCard(inspectedCardList[nextIndex]);
   };
 
+  const guideTribes = [
+    {
+      id: 'Blob', name: 'Blobs', subtitle: 'Pirates', icon: '/tribes/blob.png', color: 'red',
+      style: 'Aggression · Swarm · Direct damage', quote: '“Pirate Pests Plunder Positions, Pile Up, and Pulverize!”',
+      intro: 'Blobs are an aggressive, board-flooding tribe that excels at overwhelming opponents with numerous small units, spreading pressure across lanes, and dealing damage directly. Their cards often reward playing multiple units and making the most of every attack.',
+      strengths: ['Excellent at filling the board through Swarm, token creation, and copying effects.','Strong lane-wide and multi-target damage.','Can apply pressure to the opponent without necessarily winning individual fights.','Several cards reward having lots of friendly units or attacking in groups.'],
+      keywords: ['Swarm: Counts as multiple units instead of one.','Stack: Allows a unit to share a space with another friendly unit.','Nimble: Provides immediate movement and attack potential.','Flame: Creates additional damage through Fire Trap tokens.','Celerity: Gives units an opportunity to attack before their opponents.'],
+      abilities: 'Creating Blob tokens, spreading units across lanes, dealing damage to multiple targets, rewarding friendly unit entries, and giving groups of units offensive buffs.',
+      weaknesses: ['Individual Blobs can be fragile and vulnerable to removal.','Many of their strategies rely on maintaining a board presence.','Their swarms can be punished by widespread damage and destruction effects.','Some of their most powerful effects can also damage their own side.'],
+      strategy: 'Establish a wide board early, spread your forces across multiple lanes, and use buffs, extra attacks, and damage effects to overwhelm the opponent before they can stabilise. Blobs want to turn a small advantage into an unstoppable tidal wave of goo.'
+    },
+    {
+      id: 'Goonger', name: 'Goongers', subtitle: 'Royalty and Medieval Warriors', icon: '/tribes/goonger.png', color: 'yellow',
+      style: 'Defence · Durability · Healing', quote: '“Medieval Masters of Medicine, Might, and Magnificent Defence!”',
+      intro: 'Goongers are the defensive and durable tribe. They excel at protecting their side of the board, surviving combat, punishing attackers, and keeping their units alive through healing and defensive effects.',
+      strengths: ['Excellent defensive capabilities.','Strong healing and survivability.','Can punish opponents for attacking them.','Particularly effective at protecting valuable units and controlling enemy movement.','Have tools to neutralise dangerous enemy units through Stun.'],
+      keywords: ['Taunt: Forces opponents to deal with a particular unit before targeting others behind it.','Revenge: Returns damage to enemies that damage the unit.','Boned: Reduces incoming damage.','Stun: Prevents a unit from moving and attacking for its affected turn.','Cleave: Damages additional enemy units around the target.'],
+      abilities: 'Healing units and players, returning destroyed Goons from the Gooraveyard, granting defensive buffs, protecting entire sides of the board, and punishing enemies for attacking.',
+      weaknesses: ['Their defensive approach can make it harder to establish offensive pressure.','Some cards depend on surviving long enough to generate value.','Their strategies can be disrupted by effects that bypass ordinary combat.','They may struggle against opponents who avoid fighting their defensive units altogether.'],
+      strategy: 'Build a sturdy defensive formation, protect your important cards, and force the opponent to fight on your terms. Use healing, Taunt, Revenge, and Stun to exhaust their resources before gradually pushing forward.'
+    },
+    {
+      id: 'Lubina', name: 'Lubinas', subtitle: 'Dancers', icon: '/tribes/bina.png', color: 'pink',
+      style: 'Movement · Buffs · Positioning', quote: '“Dazzling Dancers Dash, Displace, and Dominate the Dancefloor!”',
+      intro: 'Binas are a movement-oriented, combo-focused tribe that uses positioning, lane manipulation, buffs, and additional attacks to gain the upper hand. They are particularly good at making the most of the board’s layout.',
+      strengths: ['Excellent mobility and lane manipulation.','Can create unexpected attacks and reposition units to favourable spaces.','Strong buffing potential, especially when multiple friendly units are involved.','Can exploit enemy positioning and punish poorly defended lanes.','Have ways to grant additional attacks and movement.'],
+      keywords: ['Sidewinder: Allows a unit to change lanes after dealing damage.','Overkill: Converts excess damage into additional damage against nearby targets or the opponent.','Brawl: Makes combat simultaneous.','Celerity: Enables attacks before ordinary combat order.'],
+      abilities: 'Moving cards between lanes, creating extra attacks, buffing friendly units, copying units, rewarding nearby friendly units, and improving the effectiveness of other buffs.',
+      weaknesses: ['Their strategies can require careful positioning and timing.','Individual units may be relatively fragile.','Their buffs and movement effects are less effective if the opponent can disrupt their setup.','Some powerful combinations require multiple cards to work together.'],
+      strategy: 'Manipulate the battlefield, find openings, and use movement and buffs to create favourable engagements. Binas thrive on unpredictability: they want to make the opponent defend against attacks coming from places they did not expect.'
+    },
+    {
+      id: 'Slobbant', name: 'Slobbants', subtitle: 'Undead and Warlocks', icon: '/tribes/slobbant.png', color: 'purple',
+      style: 'Destruction · Sacrifice · Graveyard', quote: '“Undead Unleash Unholy Upheaval, Undermining Unprepared Opponents!”',
+      intro: 'Slobbants specialise in destruction, death-related effects, debuffs, and exploiting the Gooraveyard. They are particularly good at turning the opponent’s losses into their own advantages.',
+      strengths: ['Strong single-target and board-wide removal.','Can weaken or destroy enemy units through debuffs and Poison.','Benefit from cards dying on either side of the battlefield.','Have ways to recover or reuse cards from the Gooraveyard.','Can create powerful threats through sacrifice and death-related synergies.'],
+      keywords: ['Poison: Destroys an enemy unit at the end of combat after damaging it.','Virus: Spreads stat reductions to nearby enemy units when a card is destroyed.','Overslimed: Changes certain cards’ reveal timing and interactions.'],
+      abilities: 'Destroying enemy cards, weakening units, benefiting from friendly or enemy deaths, sacrificing Goons for effects, returning cards from the Gooraveyard, and creating copies of destroyed units.',
+      weaknesses: ['Some of their strongest effects require preparation or specific conditions.','Sacrifice strategies can consume valuable board presence.','Their removal can be expensive or restricted by target requirements.'],
+      strategy: 'Control the battlefield by removing threats, weakening enemy formations, and turning deaths into opportunities. Slobbants want every destruction to advance their game plan, whether that means strengthening their own units, recovering resources, or unleashing something much worse.'
+    },
+    {
+      id: 'Mutant', name: 'Mutants', subtitle: 'Laborers and Scientists', icon: '/tribes/mutant.png', color: 'blue',
+      style: 'Resources · Card advantage · Utility', quote: '“Strange Scientists Strategically Study, Stockpile, and Surpass!”',
+      intro: 'Mutants are the resource-management and utility tribe. They specialise in drawing cards, generating Gold and Diamonds, manipulating resources, and using unusual effects to gain an advantage over time.',
+      strengths: ['Excellent card draw and hand manipulation.','Can generate additional Gold and Diamonds.','Have ways to recycle and reuse cards.','Can scale their units through drawing cards or spending resources.','Possess unusual utility effects that can disrupt the opponent’s plans.'],
+      keywords: ['Diamond: A special resource that can be spent for powerful effects.','Recall: Returns cards to their owner’s hand.','Recycle: Removes cards from circulation in exchange for other benefits, depending on the effect.','Avian: Provides an alternative way to bypass ordinary blocking.'],
+      abilities: 'Drawing cards, generating Gold or Diamonds, reducing card costs, recycling cards, returning cards to hand, and gaining bonuses whenever resources are spent.',
+      weaknesses: ['Their strongest strategies can take time to develop.','Resource generation does not necessarily translate into immediate board control.','Some cards depend on having enough cards in hand or spending Diamonds.','Their unusual utility effects can require careful resource management.'],
+      strategy: 'Build up your hand and resources while using efficient cards to maintain control of the game. Mutants aim to outlast and out-resource the opponent, eventually using their accumulated advantages to unleash powerful units and effects.'
+    },
+    {
+      id: 'Neutral', name: 'Neutrals', subtitle: 'Mysterious creatures', icon: '/tribes/neutral.png', color: 'zinc',
+      style: 'Flexibility · Niche roles · Universal aid', quote: '“Unbound by tribe. Unpredictable by nature.”',
+      intro: 'Neutrals are mysterious creatures that are not associated with any of the five main tribes. They serve as a universal aid to any deck, filling niche roles, providing situational abilities, or offering weaker, straightforward functions that support a strategy without belonging to a particular tribe.',
+      strengths: ['Can be included alongside any tribe.','Fill specific gaps that a deck’s main tribes may not cover.','Offer situational abilities for particular board states.','Provide simple, reliable effects and flexible utility.'],
+      keywords: ['Universal: Neutral cards are not counted as one of the two tribes in a deck.','Flexibility: Their role is to support a deck’s plan or fill a missing function.'],
+      abilities: 'Niche utility, situational effects, basic functions, and support pieces that can complement a wide range of strategies.',
+      weaknesses: ['They may not provide the deep tribal synergies of the five main tribes.','Some are deliberately more modest in power because they are broadly accessible.'],
+      strategy: 'Use Neutrals to fill the gaps in your deck. Choose them for a useful effect, a role your tribes lack, or a dependable card that helps your main strategy work.'
+    }
+  ];
+  const selectedTribeInfo = guideTribes.find((tribe) => tribe.id === selectedGuideTribe) || null;
+  const selectedTribeCards = selectedTribeInfo ? allCards.filter((card) => card.tribe === selectedTribeInfo.id) : [];
+
   return (
     <div className="h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans select-none overflow-hidden">
       {/* TOP NAVIGATION BAR */}
@@ -4275,7 +4404,16 @@ export default function App() {
         </div>
 
         {/* Mode Switcher Pills */}
-        <nav className="flex items-center bg-zinc-950 p-1 rounded-2xl border border-zinc-800 shadow-inner">
+        <nav className="flex flex-wrap justify-center items-center bg-zinc-950 p-1 rounded-2xl border border-zinc-800 shadow-inner">
+          <button
+            onClick={() => setActiveView('howToPlay')}
+            className={`flex items-center gap-2 px-3.5 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+              activeView === 'howToPlay' ? 'bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-lg shadow-red-950/50' : 'text-zinc-400 hover:text-red-300'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>How to Play</span>
+          </button>
           <button
             onClick={() => setActiveView('collection')}
             className={`flex items-center gap-2 px-3.5 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
@@ -4284,7 +4422,7 @@ export default function App() {
                 : 'text-zinc-400 hover:text-zinc-100'
             }`}
           >
-            <BookOpen className="w-4 h-4" />
+            <Layers3 className="w-4 h-4" />
             <span>Collection & Decks</span>
           </button>
           <button
@@ -4306,7 +4444,7 @@ export default function App() {
                 : 'text-zinc-400 hover:text-blue-300'
             }`}
           >
-            <BookOpen className="w-4 h-4" />
+            <Megaphone className="w-4 h-4" />
             <span>News & Updates</span>
           </button>
         </nav>
@@ -4316,6 +4454,177 @@ export default function App() {
       {/* ==================================================================== */}
       {/* VIEW 1: COLLECTION VIEWER & DECK BUILDER (WIREFRAME 3)               */}
       {/* ==================================================================== */}
+      {activeView === 'howToPlay' && (
+        <main className="flex-1 min-h-0 overflow-y-auto bg-[#09090b] select-text">
+          <div className="max-w-7xl mx-auto px-4 sm:px-7 pb-14">
+            <section className="relative isolate -mx-4 sm:-mx-7 overflow-hidden border-b border-red-900/50 bg-[radial-gradient(ellipse_at_50%_45%,rgba(220,38,38,.2),transparent_42%),linear-gradient(120deg,#16090b,#09090b_65%)] px-4 sm:px-8 py-12 sm:py-16">
+              <style>{`@keyframes goldex-card-drift{0%,100%{translate:0 0}50%{translate:0 -13px}} .goldex-hero-card{animation:goldex-card-drift 5s ease-in-out infinite;}`}</style>
+              <div className="pointer-events-none absolute inset-0 overflow-hidden"><div className="absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-500/15 animate-pulse"/><div className="absolute left-1/2 top-1/2 h-[21rem] w-[21rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-rose-300/10"/><div className="absolute -left-24 top-0 h-72 w-72 rounded-full bg-red-600/10 blur-3xl"/><div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-orange-500/10 blur-3xl"/></div>
+              <div className="relative mx-auto flex min-h-[390px] max-w-7xl items-center justify-center sm:min-h-[470px]">
+                <div className="relative z-20 max-w-3xl px-3 text-center">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-red-500/40 bg-red-950/70 px-4 py-2 text-[11px] font-black tracking-[.25em] text-red-200 uppercase shadow-lg"><Sparkles className="h-4 w-4"/> The Gold & Goons Field Guide</div>
+                  <h1 className="mt-6 text-4xl font-black leading-[.98] tracking-tight text-white sm:text-6xl lg:text-7xl">Welcome to <span className="bg-gradient-to-r from-red-300 via-rose-200 to-orange-200 bg-clip-text text-transparent">Gold and Goons!</span></h1>
+                  <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-lg">Learn the battlefield, discover your tribe, and master every trick, trap, and Goon standing between you and victory.</p>
+
+                </div>
+                {guideTribes.flatMap((tribe) => allCards.filter((card) => card.tribe === tribe.id && card.imagePath).slice(0, 2)).map((card, index) => {const positions=['left-[1%] top-[7%] w-20 sm:w-28 -rotate-12','right-[1%] top-[6%] w-20 sm:w-28 rotate-12','left-[10%] bottom-[3%] w-20 sm:w-28 rotate-6','right-[10%] bottom-[3%] w-20 sm:w-28 -rotate-6','left-[22%] top-[2%] w-16 sm:w-24 -rotate-6','right-[22%] top-[2%] w-16 sm:w-24 rotate-6','left-[3%] top-[48%] w-16 sm:w-24 rotate-6','right-[3%] top-[48%] w-16 sm:w-24 -rotate-6','left-[31%] bottom-[1%] w-16 sm:w-24 rotate-3','right-[31%] bottom-[1%] w-16 sm:w-24 -rotate-3','left-[39%] top-[1%] w-14 sm:w-20 -rotate-3','right-[39%] top-[1%] w-14 sm:w-20 rotate-3'];return <button key={card.id} type="button" onClick={()=>setInspectedCard(card)} aria-label={`View ${card.name}`} className={`goldex-hero-card group absolute z-10 hidden overflow-hidden rounded-lg border-2 border-red-300/50 bg-zinc-950 shadow-[0_16px_55px_rgba(0,0,0,.65)] transition-all duration-300 hover:z-30 hover:scale-110 hover:border-red-200 hover:shadow-[0_20px_70px_rgba(220,38,38,.35)] sm:block ${positions[index % positions.length]}`} style={{animationDelay:`${index*.24}s`}}><img src={card.imagePath} alt={card.name} className="aspect-[3/4] w-full object-contain transition-transform duration-300 group-hover:scale-105"/></button>})}
+              </div>
+              <div className="relative z-20 mt-3 flex justify-center sm:hidden"><span className="rounded-full border border-red-500/30 bg-zinc-950/90 px-4 py-2 text-[10px] font-black tracking-widest text-red-300">TAP A CARD BELOW TO EXPLORE</span></div>
+              <div className="relative z-20 mx-auto mt-5 grid max-w-3xl grid-cols-3 gap-2 sm:hidden">{guideTribes.map((tribe)=>{const card=allCards.find((entry)=>entry.tribe===tribe.id && entry.imagePath);return card?<button key={tribe.id} type="button" onClick={()=>setInspectedCard(card)} aria-label={`View ${tribe.name} card ${card.name}`} className="overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 p-1 transition-transform active:scale-95"><img src={card.imagePath} alt={`${tribe.name}: ${card.name}`} className="aspect-[3/4] w-full object-contain"/><span className="block truncate px-1 py-1 text-[10px] font-bold text-zinc-300">{tribe.name}</span></button>:null})}</div>
+            </section>
+
+            <section className="grid gap-4 py-7 md:grid-cols-2" aria-label="More ways to learn Gold and Goons">
+              <article className="relative overflow-hidden rounded-2xl border border-red-900/50 bg-gradient-to-br from-red-950/50 via-zinc-900 to-zinc-950 p-5 sm:p-6"><div className="flex items-start gap-4"><div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-red-500/30 bg-red-950 text-red-200"><span className="text-2xl">▶</span></div><div><p className="text-[10px] font-black uppercase tracking-[.22em] text-red-300">Watch & learn</p><h2 className="mt-1 text-xl font-black text-white">Video: How to Play</h2><p className="mt-2 text-sm leading-relaxed text-zinc-300">A guided video walkthrough is in production and will be available here soon.</p><span className="mt-4 inline-flex rounded-full border border-red-500/30 bg-red-950/70 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-red-200">Coming soon</span></div></div></article>
+              <a href="https://docs.google.com/document/d/1z8WG-jafRYxpN5UMV7RwSB_WgLbNFP-d3T6IyKCvo-E/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="group relative overflow-hidden rounded-2xl border border-zinc-700 bg-gradient-to-br from-zinc-800/80 via-zinc-900 to-zinc-950 p-5 transition-all hover:-translate-y-1 hover:border-red-500/60 hover:shadow-xl hover:shadow-red-950/20 sm:p-6"><div className="flex items-start gap-4"><div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-zinc-600 bg-zinc-800 text-2xl text-red-200">▤</div><div><p className="text-[10px] font-black uppercase tracking-[.22em] text-red-300">Advanced reference</p><h2 className="mt-1 text-xl font-black text-white">In-depth Rules Document</h2><p className="mt-2 text-sm leading-relaxed text-zinc-300">For experienced players: a detailed reference covering the rules and their interactions, beyond this beginner-friendly guide.</p><span className="mt-4 inline-flex items-center gap-2 rounded-lg bg-red-600 px-3 py-2 text-xs font-black text-white transition-colors group-hover:bg-red-500">Open full rules <ChevronRight className="h-3.5 w-3.5"/></span></div></div></a>
+            </section>
+
+            <nav className="sticky top-0 z-30 -mx-4 sm:-mx-7 px-4 sm:px-7 py-3 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800/80">
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {[
+                  ['guide-objective','Objective'],['guide-setup','Setup'],['guide-tribes','Tribes'],['guide-battlefield','Battlefield'],['guide-cards','Card types'],
+                  ['guide-resources','Resources'],['guide-turn','Your turn'],['guide-combat','Combat'],['guide-winning','Winning'],['keyword-glossary','Glossary']
+                ].map(([id,label],i)=><button key={id} onClick={()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'})} className="shrink-0 rounded-full border border-zinc-700 bg-zinc-900 hover:bg-red-950 hover:border-red-500/60 hover:text-red-200 px-4 py-2 text-xs font-black text-zinc-300 transition-all hover:-translate-y-0.5">{String(i+1).padStart(2,'0')} · {label}</button>)}
+              </div>
+            </nav>
+
+            <section id="guide-objective" className="scroll-mt-24 pt-12 space-y-5">
+              <div className="flex items-end justify-between gap-4"><div><p className="text-xs font-black tracking-[.28em] text-red-400 uppercase">01 / Objective</p><h2 className="text-3xl sm:text-4xl font-black text-white mt-2">One goal. Their Health to zero.</h2><p className="mt-2 text-zinc-400 max-w-2xl">Bring your opponent from 20 Health down to 0 using attacks and card effects.</p></div><span className="hidden sm:block text-5xl">⚔️</span></div>
+              <div className="grid md:grid-cols-[1fr_auto_1fr] gap-4 items-center rounded-3xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-6 sm:p-9 shadow-xl">
+                <div className="text-center rounded-2xl bg-emerald-950/40 border border-emerald-800/60 p-6"><div className="text-xs uppercase tracking-widest text-emerald-300 font-black">Your Health</div><div className="text-6xl font-black text-white mt-2 tabular-nums">20</div><div className="text-xs text-zinc-400 mt-1">Protect your side</div></div>
+                <div className="text-center"><div className="text-2xl font-black text-red-400">VS</div><div className="text-xs text-zinc-600 mt-1">FIGHT</div></div>
+                <div className="text-center rounded-2xl bg-red-950/40 border border-red-800/60 p-6"><div className="text-xs uppercase tracking-widest text-red-300 font-black">Opponent Health</div><div className="text-6xl font-black text-white mt-2 tabular-nums">20</div><div className="text-xs text-zinc-400 mt-1">Break through</div></div>
+                <p className="md:col-span-3 text-center text-sm text-zinc-300 border-t border-zinc-800 pt-4">Reduce the opposing player’s Health to 0. If both players reach 0 at the same time, the game is a draw.</p>
+              </div>
+            </section>
+
+            <section id="guide-setup" className="scroll-mt-24 pt-14 space-y-5">
+              <div><p className="text-xs font-black tracking-[.28em] text-red-400 uppercase">02 / Setup</p><h2 className="text-3xl sm:text-4xl font-black text-white mt-2">Get the table ready.</h2></div>
+              <div className="grid lg:grid-cols-2 gap-5">
+                <article className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
+                  <h3 className="text-xl font-black text-white">What each player needs</h3>
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    {[['30','card deck','🃏'],['20','starting Health','❤️'],['2','starting Gold','🪙'],['3 × 9','battlefield spaces','🧩']].map(([n,t,e])=><div key={t} className="rounded-2xl bg-zinc-950 border border-zinc-800 p-4"><div className="text-2xl">{e}</div><div className="mt-2 text-2xl font-black text-white">{n}</div><div className="text-xs text-zinc-400">{t}</div></div>)}
+                  </div>
+                  <p className="mt-4 text-sm leading-relaxed text-zinc-400">You need a 30-card deck, a battle board with 3 lanes and 9 spaces per lane, Health and Gold counters, and a turn counter if needed.</p>
+                </article>
+                <article className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6">
+                  <h3 className="text-xl font-black text-white">Shuffle up and draw</h3>
+                  <div className="flex items-center gap-4 mt-4">
+                    <div className="flex-1 rounded-2xl bg-zinc-950 p-4 text-center border border-zinc-800"><div className="text-xs text-zinc-500 uppercase font-black">Player 1</div><div className="text-4xl font-black text-red-300 mt-1">4</div><div className="text-xs text-zinc-400">opening cards</div></div>
+                    <div className="flex-1 rounded-2xl bg-zinc-950 p-4 text-center border border-zinc-800"><div className="text-xs text-zinc-500 uppercase font-black">Player 2</div><div className="text-4xl font-black text-red-300 mt-1">5</div><div className="text-xs text-zinc-400">opening cards</div></div>
+                  </div>
+                  <p className="mt-4 text-sm leading-relaxed text-zinc-400">Both players draw 4 cards; Player 2 draws 5. Each player may mulligan any number of opening-hand cards, putting each chosen card on the bottom of their deck. Each card can be mulliganed once.</p>
+                </article>
+              </div>
+              <article className="rounded-3xl border border-red-900/50 bg-gradient-to-br from-red-950/30 via-zinc-900 to-zinc-950 p-6 sm:p-7">
+                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-black tracking-[.24em] text-red-300 uppercase">Build your deck</p><h3 className="mt-2 text-2xl sm:text-3xl font-black text-white">Choose your tribe.</h3><p className="mt-2 max-w-3xl text-sm leading-relaxed text-zinc-300">A standard deck has 30 cards, up to 3 copies of each card, and cards from up to 2 tribes plus Neutral cards. Pick a tribe to explore its identity, tactics, and every card in its arsenal.</p></div><span className="rounded-xl border border-red-500/30 bg-red-950/40 px-4 py-2 text-xs font-black text-red-200">5 tribes + Neutral</span></div>
+                <div id="guide-tribes" className="scroll-mt-28 mt-6 grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                  {guideTribes.map((tribe, index) => {
+                    const samples = allCards.filter((card) => card.tribe === tribe.id).slice(0, 3);
+                    const accent = tribe.color === 'red' ? 'red' : tribe.color === 'yellow' ? 'yellow' : tribe.color === 'pink' ? 'pink' : tribe.color === 'purple' ? 'purple' : tribe.color === 'blue' ? 'blue' : 'zinc';
+                    return <button key={tribe.id} type="button" onClick={() => setSelectedGuideTribe(tribe.id)} className={`group relative overflow-hidden rounded-2xl border bg-zinc-950/80 p-4 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${selectedGuideTribe === tribe.id ? 'border-red-400 ring-1 ring-red-500/40' : 'border-zinc-800 hover:border-red-500/60'}`}>
+                      <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-red-600/5 blur-2xl transition group-hover:bg-red-500/15" />
+                      <div className="relative flex items-center gap-3"><img src={tribe.icon} alt={`${tribe.name} tribe icon`} className="h-14 w-14 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"/><div className="min-w-0 flex-1"><p className="text-[10px] font-black tracking-[.22em] text-red-400">TRIBE 0{index+1}</p><h4 className="text-xl font-black text-white">{tribe.name}</h4><p className="text-xs text-zinc-400">{tribe.subtitle}</p></div><ChevronRight className="h-5 w-5 text-zinc-500 transition group-hover:translate-x-1 group-hover:text-red-300"/></div>
+                      <p className="relative mt-3 text-xs font-bold text-zinc-300">{tribe.style}</p><p className="relative mt-2 min-h-[42px] text-sm italic leading-relaxed text-red-200">{tribe.quote}</p>
+                      <div className="relative mt-4 flex gap-2">{samples.map((card) => <img key={card.id} src={card.imagePath} alt={card.name} title={card.name} className="w-[28%] max-w-[88px] rounded-lg border border-zinc-700 bg-zinc-900 object-contain shadow-lg transition-transform duration-300 group-hover:-translate-y-1"/>)}{!samples.length && <span className="text-xs text-zinc-500">No cards found</span>}</div>
+                      <div className="relative mt-4 flex items-center justify-between border-t border-zinc-800 pt-3 text-[11px] font-black text-red-300"><span>{allCards.filter((card) => card.tribe === tribe.id).length} cards in the Goldex</span><span className="group-hover:underline">Explore tribe →</span></div>
+                    </button>;
+                  })}
+                </div>
+                {selectedTribeInfo && <div className="mt-6 overflow-hidden rounded-3xl border border-red-500/40 bg-zinc-950 shadow-[0_20px_80px_rgba(127,29,29,.18)] animate-in fade-in slide-in-from-bottom-3 duration-300">
+                  <div className="relative border-b border-red-900/50 bg-[radial-gradient(ellipse_at_85%_15%,rgba(220,38,38,.22),transparent_45%),linear-gradient(110deg,#21090d,#09090b_70%)] p-5 sm:p-8"><button type="button" onClick={() => setSelectedGuideTribe(null)} className="absolute right-4 top-4 rounded-lg border border-zinc-700 bg-zinc-900/80 px-3 py-2 text-xs font-black text-zinc-300 hover:border-red-400 hover:text-white">← All tribes</button><div className="flex flex-col sm:flex-row sm:items-center gap-4 pr-24"><img src={selectedTribeInfo.icon} alt="" className="h-20 w-20 sm:h-28 sm:w-28 object-contain drop-shadow-2xl"/><div><p className="text-xs font-black tracking-[.25em] text-red-300 uppercase">Tribe field dossier</p><h3 className="mt-1 text-3xl sm:text-5xl font-black text-white">{selectedTribeInfo.name}</h3><p className="mt-1 text-sm text-zinc-300">{selectedTribeInfo.subtitle} · {selectedTribeInfo.style}</p></div></div><blockquote className="mt-5 max-w-4xl border-l-4 border-red-500 pl-4 text-lg sm:text-2xl font-black italic text-red-100">{selectedTribeInfo.quote}</blockquote><p className="mt-4 max-w-5xl text-sm sm:text-base leading-relaxed text-zinc-300">{selectedTribeInfo.intro}</p></div>
+                  <div className="grid lg:grid-cols-2 gap-4 p-5 sm:p-7"><article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5"><h4 className="text-lg font-black text-emerald-300">Strengths</h4><ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-zinc-300">{selectedTribeInfo.strengths.map((item) => <li key={item}>{item}</li>)}</ul></article><article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5"><h4 className="text-lg font-black text-red-300">Weaknesses</h4><ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-zinc-300">{selectedTribeInfo.weaknesses.map((item) => <li key={item}>{item}</li>)}</ul></article><article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5"><h4 className="text-lg font-black text-sky-300">Key keywords & mechanics</h4><ul className="mt-3 space-y-2 text-sm leading-relaxed text-zinc-300">{selectedTribeInfo.keywords.map((item) => <li key={item} className="border-b border-zinc-800 pb-2 last:border-0">{item}</li>)}</ul></article><article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5"><h4 className="text-lg font-black text-amber-300">Common abilities</h4><p className="mt-3 text-sm leading-relaxed text-zinc-300">{selectedTribeInfo.abilities}</p><h4 className="mt-5 text-lg font-black text-amber-200">Overall strategy</h4><p className="mt-2 text-sm leading-relaxed text-zinc-300">{selectedTribeInfo.strategy}</p></article></div>
+                  <div className="border-t border-zinc-800 p-5 sm:p-7"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-black tracking-[.24em] text-red-300 uppercase">Goldex archive</p><h4 className="mt-1 text-2xl sm:text-3xl font-black text-white">Every {selectedTribeInfo.name} card</h4><p className="mt-1 text-sm text-zinc-400">Select any card to inspect its full card face, stats, and rules text.</p></div><span className="rounded-full bg-red-950 px-3 py-1.5 text-xs font-black text-red-200">{selectedTribeCards.length} cards</span></div>
+                    {selectedTribeCards.length ? <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3">{selectedTribeCards.map((card) => <button key={card.id} type="button" onClick={() => setInspectedCard(card)} className="group rounded-xl border border-zinc-800 bg-zinc-900 p-2 text-left transition-all hover:-translate-y-1 hover:border-red-500/70 hover:shadow-xl hover:shadow-red-950/30"><img src={card.imagePath} alt={card.name} loading="lazy" className="mx-auto aspect-[3/4] w-full rounded-lg object-contain transition-transform duration-300 group-hover:scale-[1.03]"/><p className="mt-2 truncate text-xs font-black text-white">{card.name}</p><p className="mt-1 text-[10px] text-zinc-500">{card.type} · {card.rarity}</p></button>)}</div> : <p className="mt-5 rounded-xl border border-zinc-800 bg-zinc-900 p-5 text-sm text-zinc-400">No cards are currently assigned to this tribe in the Goldex database.</p>}
+                  </div>
+                </div>}
+              </article>
+            </section>
+
+            <section id="guide-battlefield" className="scroll-mt-24 pt-14 space-y-5">
+              {/* The hand-drawn landscape board is the sole board illustration; do not add a duplicate digital replica here. */}
+              <div><p className="text-xs font-black tracking-[.28em] text-red-400 uppercase">04 / Battlefield</p><h2 className="text-3xl sm:text-4xl font-black text-white mt-2">Know your lanes.</h2><p className="mt-2 max-w-3xl text-zinc-400">The battlefield has three lanes, each divided into nine spaces. Your side is spaces 1–3, the Half-Line is 4–6, and the opponent’s side is 7–9. Space 0 is the Player Space behind Space 1.</p></div>
+              <div className="relative overflow-hidden rounded-3xl border border-red-900/50 bg-gradient-to-br from-red-950/30 via-zinc-900 to-zinc-950 p-3 sm:p-5 shadow-2xl">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><div><p className="text-xs font-black tracking-[.2em] text-red-300 uppercase">Your physical battlefield</p><h3 className="mt-1 text-xl sm:text-2xl font-black text-white">The board you actually play on.</h3></div><span className="rounded-full border border-red-500/30 bg-red-950/50 px-3 py-1.5 text-[10px] font-black tracking-widest text-red-200">3 LANES · 9 SPACES</span></div>
+                <img src="/board-reference.webp" alt="Gold and Goons hand-drawn battlefield board, shown in landscape orientation" className="block w-full max-h-[560px] rounded-2xl border border-zinc-700 bg-zinc-950 object-contain shadow-xl"/>
+                <div className="mt-4 grid sm:grid-cols-3 gap-2 text-xs"><div className="rounded-xl border border-emerald-800/70 bg-emerald-950/60 p-3 text-emerald-200"><b>Your side · 1–3</b><p className="mt-1 text-emerald-100/70">Your deployment area.</p></div><div className="rounded-xl border border-amber-800/70 bg-amber-950/60 p-3 text-amber-200"><b>Half-Line · 4–6</b><p className="mt-1 text-amber-100/70">The central contested region.</p></div><div className="rounded-xl border border-red-800/70 bg-red-950/60 p-3 text-red-200"><b>Enemy side · 7–9</b><p className="mt-1 text-red-100/70">Push through to the opponent.</p></div></div>
+              </div>
+              <p className="text-xs text-zinc-500">The board image is the visual reference for the physical layout. Space 0 is the Player Space behind Space 1.</p>
+            </section>
+
+            <section id="guide-cards" className="scroll-mt-24 pt-14 space-y-5">
+              <div><p className="text-xs font-black tracking-[.28em] text-red-400 uppercase">05 / Your cards</p><h2 className="text-3xl sm:text-4xl font-black text-white mt-2">Five card types. Five ways to play.</h2><p className="mt-2 text-zinc-400">Select any card to open its full Goldex detail view, including its rules text and stats.</p></div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                {[
+                  ['Goon','Moves, attacks, and defends across the lanes. Goons have Cost, Strength, and Health. By default they move 3 spaces when combat begins.','Lil Blobaby'],
+                  ['Tower','A stationary unit on your side. Towers attack and support lanes using Range and abilities; default Range is 3.','Blob Factory'],
+                  ['Trick','A one-use effect that resolves immediately, then goes to its owner’s Gooraveyard.','Fling O Dynamite'],
+                  ['Trap','Played face-down. Usually triggers when a unit lands on its space (Trip); durability or a trigger limit governs how long it stays.','Caltrops'],
+                  ['Trinket','Equipment attached to a unit or Trap in play. It leaves play when its attached card is removed.','Micro Blob-pult'],
+                ].map(([type,desc,cardName])=>{
+                  const example=allCards.find(c=>c.name===cardName);
+                  return <button key={type} onClick={()=>example&&setInspectedCard(example)} className="group text-left rounded-2xl border border-zinc-800 bg-zinc-900 p-3 hover:border-red-500/70 hover:bg-red-950/20 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-950/30 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    {example?.imagePath?<img src={example.imagePath} alt={example.name} className="w-full max-w-44 mx-auto aspect-[3/4] object-contain rounded-lg drop-shadow-xl transition-transform duration-300 group-hover:scale-105"/>:<div className="h-56 flex items-center justify-center text-zinc-500">Card art unavailable</div>}
+                    <div className="mt-3 text-center"><div className="text-lg font-black text-red-300">{type}</div><div className="text-xs text-zinc-400">{cardName}</div></div>
+                    <p className="mt-3 text-xs leading-relaxed text-zinc-400">{desc}</p>
+                    <div className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-zinc-950 px-3 py-2 text-[11px] font-black text-red-300 group-hover:bg-red-600 group-hover:text-white transition-colors"><Eye className="w-3.5 h-3.5"/> View card details</div>
+                  </button>;
+                })}
+              </div>
+            </section>
+
+            <section id="guide-resources" className="scroll-mt-24 pt-14 space-y-5">
+              <div><p className="text-xs font-black tracking-[.28em] text-red-400 uppercase">06 / Resources</p><h2 className="text-3xl sm:text-4xl font-black text-white mt-2">Gold fuels your strategy.</h2></div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="rounded-3xl border border-amber-500/30 bg-gradient-to-br from-amber-950/40 to-zinc-900 p-6"><div className="text-amber-300 text-sm font-black tracking-widest">GOLD · (X)</div><div className="text-5xl font-black text-white mt-3">2 <span className="text-amber-400">→</span> 15</div><p className="text-sm text-zinc-300 mt-3">Both players start with 2 Gold. Unspent Gold carries over, and you may store up to 15 Gold.</p></div>
+                <div className="rounded-3xl border border-sky-500/30 bg-gradient-to-br from-sky-950/30 to-zinc-900 p-6"><div className="text-sky-300 text-sm font-black tracking-widest">YIELD RATE</div><div className="text-5xl font-black text-white mt-3">+2 <span className="text-sky-300">/ turn</span></div><p className="text-sm text-zinc-300 mt-3">Both players start with a Yield Rate of +2. It increases by +1 every 5 turns, up to +5. At the start of each turn, gain Gold equal to your current Yield Rate.</p></div>
+              </div>
+            </section>
+
+            <section id="guide-turn" className="scroll-mt-24 pt-14 space-y-5">
+              <div><p className="text-xs font-black tracking-[.28em] text-red-400 uppercase">07 / Your turn</p><h2 className="text-3xl sm:text-4xl font-black text-white mt-2">Four steps. Then the battlefield moves.</h2><p className="mt-2 text-sm text-zinc-400">Follow the sequence from left to right. Each step has its own timing.</p></div>
+              <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-3">{[
+                ['1','Start of Turn','Both players draw 1 card and gain Gold equal to their Yield Rate. Start-of-turn effects resolve. Player 1 takes the first main phase, then Player 2.','🌅'],
+                ['2','Main Phase','Play any number of cards if you can pay their costs and meet their requirements. Activate effects allowed during this timing window. After both players finish their main phases, resolve “End of turn…” abilities before combat begins.','🃏'],
+                ['3','Combat Phase','Goons move, then attacks resolve lane by lane: A, then B, then C. Defenders normally strike before aggressors; Half-Line combat is simultaneous.','⚔️'],
+                ['4','End of Turn','Resolve end-of-combat effects after all lanes, then continue to the next turn. End-of-turn abilities resolve after the main phases as described in the rules.','🌙'],
+              ].map(([n,title,body,emoji])=><article key={n} className="relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-red-500/60"><div className="flex items-center justify-between"><span className="flex w-10 h-10 items-center justify-center rounded-full bg-red-600 text-white font-black">{n}</span><span className="text-3xl">{emoji}</span></div><h3 className="mt-4 text-lg font-black text-white">{title}</h3><p className="mt-2 text-sm leading-relaxed text-zinc-400">{body}</p></article>)}</div>
+            </section>
+
+            <section id="guide-combat" className="scroll-mt-24 pt-14 space-y-5">
+              <div><p className="text-xs font-black tracking-[.28em] text-red-400 uppercase">08 / Combat</p><h2 className="text-3xl sm:text-4xl font-black text-white mt-2">See how combat resolves.</h2><p className="mt-2 text-zinc-400">Toggle the example to compare the normal attack order with simultaneous Half-Line combat.</p></div>
+              <div className="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 sm:p-7">
+                <div className="flex flex-wrap gap-2"><button onClick={()=>setGuideCombatMode('normal')} className={`rounded-xl px-4 py-2 text-xs font-black transition ${guideCombatMode==='normal'?'bg-red-600 text-white':'bg-zinc-800 text-zinc-400 hover:text-white'}`}>Normal combat</button><button onClick={()=>setGuideCombatMode('half')} className={`rounded-xl px-4 py-2 text-xs font-black transition ${guideCombatMode==='half'?'bg-red-600 text-white':'bg-zinc-800 text-zinc-400 hover:text-white'}`}>Half-Line combat</button></div>
+                <div className="mt-5 grid md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
+                  <div className="rounded-2xl border border-emerald-800 bg-emerald-950/40 p-5 text-center"><div className="text-xs font-black uppercase text-emerald-300">Defender</div><div className="text-4xl mt-2">🟢</div><div className="mt-2 text-2xl font-black text-white">4 STR</div><div className="text-xs text-zinc-400">Friendly Goon</div></div>
+                  <div className="text-center"><div className="text-3xl text-red-400">{guideCombatMode==='normal'?'➜':'⚔️'}</div><div className="text-[10px] uppercase tracking-widest font-black text-zinc-500 mt-1">{guideCombatMode==='normal'?'First strike':'Simultaneous'}</div></div>
+                  <div className="rounded-2xl border border-red-800 bg-red-950/40 p-5 text-center"><div className="text-xs font-black uppercase text-red-300">Aggressor</div><div className="text-4xl mt-2">🔴</div><div className="mt-2 text-2xl font-black text-white">3 STR</div><div className="text-xs text-zinc-400">Enemy Goon</div></div>
+                </div>
+                <div className="mt-5 rounded-2xl bg-zinc-950 border border-zinc-800 p-4">
+                  {guideCombatMode==='normal'?<><div className="text-sm font-black text-emerald-300">Normal attack order</div><p className="mt-2 text-sm text-zinc-300">The defender attacks first for 4 damage. If the aggressor survives, it attacks back for 3 damage. Combat is resolved in order.</p><div className="mt-3 flex gap-2"><span className="rounded-lg bg-emerald-950 px-3 py-2 text-xs font-black text-emerald-200">① Defender hits</span><span className="rounded-lg bg-zinc-800 px-3 py-2 text-xs font-black text-zinc-300">② Aggressor retaliates if alive</span></div></>:<><div className="text-sm font-black text-amber-300">Half-Line: simultaneous combat</div><p className="mt-2 text-sm text-zinc-300">Both units deal their damage at the same time. Neither gets to wait for the other’s attack to finish.</p><div className="mt-3 flex gap-2"><span className="rounded-lg bg-amber-950 px-3 py-2 text-xs font-black text-amber-200">⚔ Both strike together</span></div></>}
+                </div>
+                <p className="mt-4 text-xs text-zinc-500">Example values are illustrative; actual damage is determined by each card’s Strength and applicable effects.</p>
+              </div>
+              <div className="grid md:grid-cols-1 gap-4">
+                <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5"><h3 className="font-black text-white">Space 0: last line of defence</h3><ul className="mt-3 list-disc pl-5 space-y-2 text-sm text-zinc-400"><li>Only you may place units, Traps, or Trinkets on your own Player Space; opponents cannot deploy there.</li><li>A friendly unit on your Player Space acts as a guard. Enemy units attacking into it must engage the guard before damaging your Health.</li><li>If multiple enemy Goons attack your Player Space, you choose which one your guard engages that turn.</li><li>Enemy Tricks and targeted abilities may still target units or players on Space 0.</li></ul></article>
+              </div>
+            </section>
+
+            <section id="guide-winning" className="scroll-mt-24 pt-14 grid md:grid-cols-2 gap-4">
+              <article className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6"><div className="text-3xl">🪦</div><h2 className="mt-3 text-2xl font-black text-white">The Gooraveyard</h2><p className="mt-2 text-sm leading-relaxed text-zinc-400">Destroyed, discarded, used, or effect-removed cards go to the Gooraveyard unless an effect says otherwise. If your deck becomes empty, shuffle your Gooraveyard into a new deck, take 5 damage, skip drawing for a turn, and skip gaining Gold for a turn.</p></article>
+              <article className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6"><div className="text-3xl">✋</div><h2 className="mt-3 text-2xl font-black text-white">Hand limit</h2><p className="mt-2 text-sm leading-relaxed text-zinc-400">You may normally hold up to 8 cards. If you draw while already holding 8, discard the drawn card.</p></article>
+              <article className="md:col-span-2 rounded-3xl border border-red-700/50 bg-gradient-to-br from-red-950/70 via-zinc-900 to-zinc-950 p-7 sm:p-9"><p className="text-xs font-black tracking-[.25em] text-red-300 uppercase">09 / Victory</p><h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Bring their Health to zero.</h2><p className="mt-3 max-w-3xl text-zinc-300">A Goon that reaches the opponent’s Player Space and can attack deals damage directly equal to its Strength. Tricks and abilities may also damage players directly. The first player to reduce the opponent to 0 Health wins; simultaneous defeat is a draw.</p></article>
+            </section>
+
+            <section id="keyword-glossary" className="scroll-mt-24 pt-14 space-y-5">
+              <div className="border-b border-red-500/40 pb-5"><p className="text-xs font-black tracking-[.28em] text-red-400 uppercase">Final page / Reference</p><h2 className="text-3xl sm:text-5xl font-black text-white mt-2">Keyword & Terms Glossary</h2><p className="text-sm text-zinc-400 mt-2">Keep this page handy. Every keyword and term, grouped by what it affects.</p></div>
+              <div className="grid md:grid-cols-2 gap-4">{KEYWORD_GLOSSARY.map(group=><article key={group.title} className="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden"><h3 className="bg-red-950/70 border-b border-red-900/60 px-5 py-3 text-sm font-black uppercase tracking-wider text-red-200">{group.title}</h3><div className="divide-y divide-zinc-800">{group.items.map(([term,description])=><div key={term} className="px-5 py-4 hover:bg-zinc-800/50 transition-colors"><h4 className="font-black text-white">{term}</h4><p className="mt-1 text-sm leading-relaxed text-zinc-400">{description}</p></div>)}</div></article>)}</div>
+            </section>
+            <footer className="mt-14 border-t border-zinc-800 pt-6 pb-8 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-500"><span>Gold & Goons · Field Guide</span><button onClick={()=>setActiveView('collection')} className="rounded-xl bg-red-600 px-4 py-2.5 font-black text-white hover:bg-red-500 transition">Explore your collection →</button></footer>
+          </div>
+        </main>
+      )}
+
       {activeView === 'collection' && (
         <div className="flex-1 min-h-0 flex flex-col lg:flex-row relative overflow-hidden">
           {/* LEFT / MAIN COLLECTION AREA */}
