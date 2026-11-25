@@ -1350,10 +1350,10 @@ const OFFICIAL_CARDS = [
     "tribe": "Slobbant",
     "type": "Tower",
     "cost": 4,
-    "power": 3,
+    "power": 2,
     "health": 4,
     "durability": null,
-    "ability": "End of turn, you may sacrifice a Goon. When a Goon is sacrificed, add a counter to this card. Pay(all counters): Give all enemy units -X/-X until the end of combat (X=counters consumed) and if any of them reached 0 strength, destroy them. Lasts 4 turns.",
+    "ability": "End of turn, you may sacrifice a Goon. When a Goon is sacrificed, add a counter to this card. Pay(X): Spend all counters to give all enemy units -X/-X until the end of combat (X = counters consumed). If any of them reach 0 Strength, destroy them. Lasts 4 turns.",
     "flavor": "The stones call for you...",
     "imagePath": "/cards/072.webp",
     "deckArtPath": "/deck-art/072.webp"
@@ -1372,7 +1372,7 @@ const OFFICIAL_CARDS = [
     "durability": null,
     "ability": "Start of turn, both players draw an additional card. Lasts 5 turns.",
     "flavor": "Drawin' cards since 1863!",
-    "imagePath": "/cards/073.webp",
+    "imagePath": "/cards/073.png",
     "deckArtPath": "/deck-art/073.webp"
   },
   {
@@ -1638,13 +1638,13 @@ const OFFICIAL_CARDS = [
     "rarity": "Silver",
     "tribe": "Neutral",
     "type": "Trinket",
-    "cost": 4,
+    "cost": 3,
     "power": null,
     "health": null,
     "durability": null,
-    "ability": "Equip a unit: \"When this deals damage, create a 0/3 Tabula Rasa token anywhere on the board. If there is a unit on the space where the Tabula Rasa would be, deal 1 damage to it and push it back a space if able.\"",
+    "ability": "Equip a unit: +2/+1. When this or the Trinket is removed from the board, Recall the Trinket instead. When destroyed, create a 0/3 Tabula Rasa token here.",
     "flavor": "Not imbued with terra magic? Now you are with the Tabula Nugatoria! Feel the volatile slate energy force structures into existence and violently push who dares stand in the way of your Rasa!",
-    "imagePath": "/cards/088.webp",
+    "imagePath": "/cards/089.webp",
     "deckArtPath": "/deck-art/089.webp"
   },
   {
@@ -1707,10 +1707,10 @@ const OFFICIAL_CARDS = [
     "tribe": "Neutral",
     "type": "Tower",
     "cost": 6,
-    "power": 4,
-    "health": 5,
+    "power": 5,
+    "health": 4,
     "durability": null,
-    "ability": "Air Blocker, Crossfire. End of turn, create a 0/3 Tabula Rasa token on your side. All friendly Tabula Rasa tokens have Air Blocker, Everlasting, Stack, and +1/+2. Lasts 4 turns.",
+    "ability": "Air Blocker, Crossfire, Everlasting. End of turn, create a 0/3 Tabula Rasa token on your side. All friendly Tabula Rasa tokens have Air Blocker, Everlasting, Stack, and +1/+2. Lasts 6 turns.",
     "flavor": "This towering bastion continuously spreads the reach of the Tabula and empowers the stone entities in its shadow. So immense is its influence that scholars no longer call it Tabula Rasa, it has become Tabula Inscripta.",
     "imagePath": "/cards/093.webp",
     "deckArtPath": "/deck-art/093.webp"
@@ -1996,10 +1996,10 @@ const OFFICIAL_CARDS = [
     "tribe": "Slobbant",
     "type": "Goon",
     "cost": 5,
-    "power": 2,
-    "health": 6,
+    "power": 4,
+    "health": 2,
     "durability": null,
-    "ability": "Overslimed. When revealed, destroy all other Goons with 2 or less strength.",
+    "ability": "Overslimed. When revealed, destroy all other Goons with 2 or less Strength. This gets +0/+1 for each one destroyed.",
     "flavor": "\"Blobs? Early game Goons? All I'm hearing is a buffet!\"",
     "imagePath": "/cards/110.webp",
     "deckArtPath": "/deck-art/110.webp"
@@ -2033,7 +2033,7 @@ const OFFICIAL_CARDS = [
     "power": 3,
     "health": 3,
     "durability": null,
-    "ability": "Overslimed. Trip: Destroy the triggering unit. When a card is destroyed on this column or the column in front, this gets +X/+X (x = cost of the card destroyed).",
+    "ability": "Overslimed, Paywall ((2) + 2 HP). Play this as if you were playing a Trap; it is not revealed until triggered. Trip: Destroy the triggering unit. When a card is destroyed on this column or the column in front, this gets +X/+X (X = cost of the card destroyed).",
     "flavor": "He's got a bit of a two-face personality.",
     "imagePath": "/cards/112.webp",
     "deckArtPath": "/deck-art/112.webp"
@@ -2658,11 +2658,11 @@ const OFFICIAL_CARDS = [
     "rarity": "Aureum",
     "tribe": "Neutral",
     "type": "Trick",
-    "cost": 13,
+    "cost": 9,
     "power": null,
     "health": null,
     "durability": null,
-    "ability": "Deal 3 damage to the first enemy unit in each lane, three times. If there are no enemy units in a lane, damage the opponent instead. When this destroys a unit, create a 3/3 Petravir with Sluggish on the space where the unit died.",
+    "ability": "Deal 3 damage to the first enemy unit in each lane, twice. If there are no enemy units in a lane, damage the opponent instead. When this destroys a unit, create a 3/3 Petravir with Sluggish on the space where the unit died.",
     "flavor": "With the right amount of time, this invasion of Petravirs can wipe out 80% of Goomanity.",
     "imagePath": "/cards/149.webp"
   },
@@ -4467,10 +4467,10 @@ export default function App() {
                   <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-lg">Learn the battlefield, discover your tribe, and master every trick, trap, and Goon standing between you and victory.</p>
 
                 </div>
-                {guideTribes.flatMap((tribe) => allCards.filter((card) => card.tribe === tribe.id && card.imagePath).slice(0, 2)).map((card, index) => {const positions=['left-[1%] top-[7%] w-20 sm:w-28 -rotate-12','right-[1%] top-[6%] w-20 sm:w-28 rotate-12','left-[10%] bottom-[3%] w-20 sm:w-28 rotate-6','right-[10%] bottom-[3%] w-20 sm:w-28 -rotate-6','left-[22%] top-[2%] w-16 sm:w-24 -rotate-6','right-[22%] top-[2%] w-16 sm:w-24 rotate-6','left-[3%] top-[48%] w-16 sm:w-24 rotate-6','right-[3%] top-[48%] w-16 sm:w-24 -rotate-6','left-[31%] bottom-[1%] w-16 sm:w-24 rotate-3','right-[31%] bottom-[1%] w-16 sm:w-24 -rotate-3','left-[39%] top-[1%] w-14 sm:w-20 -rotate-3','right-[39%] top-[1%] w-14 sm:w-20 rotate-3'];return <button key={card.id} type="button" onClick={()=>setInspectedCard(card)} aria-label={`View ${card.name}`} className={`goldex-hero-card group absolute z-10 hidden overflow-hidden rounded-lg border-2 border-red-300/50 bg-zinc-950 shadow-[0_16px_55px_rgba(0,0,0,.65)] transition-all duration-300 hover:z-30 hover:scale-110 hover:border-red-200 hover:shadow-[0_20px_70px_rgba(220,38,38,.35)] sm:block ${positions[index % positions.length]}`} style={{animationDelay:`${index*.24}s`}}><img src={card.imagePath} alt={card.name} className="aspect-[3/4] w-full object-contain transition-transform duration-300 group-hover:scale-105"/></button>})}
+                {guideTribes.flatMap((tribe) => allCards.filter((card) => card.tribe === tribe.id && card.imagePath).slice(3, 5)).map((card, index) => {const positions=['left-[1%] top-[7%] w-20 sm:w-28 -rotate-12','right-[1%] top-[6%] w-20 sm:w-28 rotate-12','left-[10%] bottom-[3%] w-20 sm:w-28 rotate-6','right-[10%] bottom-[3%] w-20 sm:w-28 -rotate-6','left-[22%] top-[2%] w-16 sm:w-24 -rotate-6','right-[22%] top-[2%] w-16 sm:w-24 rotate-6','left-[3%] top-[48%] w-16 sm:w-24 rotate-6','right-[3%] top-[48%] w-16 sm:w-24 -rotate-6','left-[31%] bottom-[1%] w-16 sm:w-24 rotate-3','right-[31%] bottom-[1%] w-16 sm:w-24 -rotate-3','left-[39%] top-[1%] w-14 sm:w-20 -rotate-3','right-[39%] top-[1%] w-14 sm:w-20 rotate-3'];return <button key={card.id} type="button" onClick={()=>setInspectedCard(card)} aria-label={`View ${card.name}`} className={`goldex-hero-card group absolute z-10 hidden overflow-hidden rounded-lg border-2 border-red-300/50 bg-zinc-950 shadow-[0_16px_55px_rgba(0,0,0,.65)] transition-all duration-300 hover:z-30 hover:scale-110 hover:border-red-200 hover:shadow-[0_20px_70px_rgba(220,38,38,.35)] sm:block ${positions[index % positions.length]}`} style={{animationDelay:`${index*.24}s`}}><img src={card.imagePath} alt={card.name} className="aspect-[3/4] w-full object-contain transition-transform duration-300 group-hover:scale-105"/></button>})}
               </div>
               <div className="relative z-20 mt-3 flex justify-center sm:hidden"><span className="rounded-full border border-red-500/30 bg-zinc-950/90 px-4 py-2 text-[10px] font-black tracking-widest text-red-300">TAP A CARD BELOW TO EXPLORE</span></div>
-              <div className="relative z-20 mx-auto mt-5 grid max-w-3xl grid-cols-3 gap-2 sm:hidden">{guideTribes.map((tribe)=>{const card=allCards.find((entry)=>entry.tribe===tribe.id && entry.imagePath);return card?<button key={tribe.id} type="button" onClick={()=>setInspectedCard(card)} aria-label={`View ${tribe.name} card ${card.name}`} className="overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 p-1 transition-transform active:scale-95"><img src={card.imagePath} alt={`${tribe.name}: ${card.name}`} className="aspect-[3/4] w-full object-contain"/><span className="block truncate px-1 py-1 text-[10px] font-bold text-zinc-300">{tribe.name}</span></button>:null})}</div>
+              <div className="relative z-20 mx-auto mt-5 grid max-w-3xl grid-cols-3 gap-2 sm:hidden">{guideTribes.map((tribe)=>{const card=allCards.filter((entry)=>entry.tribe===tribe.id && entry.imagePath)[3];return card?<button key={tribe.id} type="button" onClick={()=>setInspectedCard(card)} aria-label={`View ${tribe.name} card ${card.name}`} className="overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 p-1 transition-transform active:scale-95"><img src={card.imagePath} alt={`${tribe.name}: ${card.name}`} className="aspect-[3/4] w-full object-contain"/><span className="block truncate px-1 py-1 text-[10px] font-bold text-zinc-300">{tribe.name}</span></button>:null})}</div>
             </section>
 
             <section className="grid gap-4 py-7 md:grid-cols-2" aria-label="More ways to learn Gold and Goons">
