@@ -5148,9 +5148,9 @@ export default function App() {
               const isTopRow = index < 2;
               const quadColors = [
                 'border-red-500/40 bg-gradient-to-br from-zinc-900 to-red-950/25',
-                'border-yellow-500/40 bg-gradient-to-bl from-zinc-900 to-yellow-950/25',
-                'border-blue-500/40 bg-gradient-to-tr from-zinc-900 to-blue-950/25',
-                'border-emerald-500/40 bg-gradient-to-tl from-zinc-900 to-emerald-950/25',
+                'border-blue-500/40 bg-gradient-to-bl from-zinc-900 to-blue-950/25',
+                'border-emerald-500/40 bg-gradient-to-tr from-zinc-900 to-emerald-950/25',
+                'border-yellow-500/40 bg-gradient-to-tl from-zinc-900 to-yellow-950/25',
               ];
               const activeCustomCounters = player.counters.filter((c) => c.value > 0).length;
 
