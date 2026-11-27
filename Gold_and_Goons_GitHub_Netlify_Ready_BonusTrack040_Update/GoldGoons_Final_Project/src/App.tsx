@@ -1655,13 +1655,13 @@ const OFFICIAL_CARDS = [
     "rarity": "Bronze",
     "tribe": "Neutral",
     "type": "Trap",
-    "cost": 4,
+    "cost": 2,
     "power": null,
     "health": null,
     "durability": 3,
-    "ability": "Trip: Deal 2 damage to the triggering unit, Stun it, and its owner loses (2).",
+    "ability": "Trip: Deal 1 damage to the triggering unit. Its owner gains (1).",
     "flavor": "A subterranean snare that crushes footsteps, leaving trespassers stunned and robbed of their momentum. Kind of like a bad day with the wife.",
-    "imagePath": "/cards/089.webp",
+    "imagePath": "/cards/091.webp",
     "deckArtPath": "/deck-art/090.webp"
   },
   {
@@ -1812,9 +1812,9 @@ const OFFICIAL_CARDS = [
     "power": 5,
     "health": 5,
     "durability": null,
-    "ability": "Everlasting. When played, Dredge three Goons. They cost (0) and have Everlasting.",
+    "ability": "Everlasting. When played, Dredge three Goons. They cost (0) and have Everlasting. If they cost (6) or more, they cost (4) less instead.",
     "flavor": "\"Clothes are temporary, but regenerating light is eternal. Besides, the clouds do all the heavy lifting.\"",
-    "imagePath": "/cards/099.webp",
+    "imagePath": "/cards/100.webp",
     "deckArtPath": "/deck-art/099.webp"
   },
   {
@@ -2607,13 +2607,13 @@ const OFFICIAL_CARDS = [
     "rarity": "Silver",
     "tribe": "Neutral",
     "type": "Goon",
-    "cost": 1,
-    "power": 1,
+    "cost": 3,
+    "power": 2,
     "health": 1,
     "durability": null,
-    "ability": "Avian. When you discard a card, you may Pay(1) to draw a copy of it.",
+    "ability": "Avian. When played, draw a card.",
     "flavor": "Here, you dropped this.",
-    "imagePath": "/cards/146.webp",
+    "imagePath": "/cards/147.webp",
     "deckArtPath": "/deck-art/146.webp"
   },
   {
@@ -4462,14 +4462,12 @@ export default function App() {
               <div className="pointer-events-none absolute inset-0 overflow-hidden"><div className="absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-500/15 animate-pulse"/><div className="absolute left-1/2 top-1/2 h-[21rem] w-[21rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-rose-300/10"/><div className="absolute -left-24 top-0 h-72 w-72 rounded-full bg-red-600/10 blur-3xl"/><div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-orange-500/10 blur-3xl"/></div>
               <div className="relative mx-auto flex min-h-[390px] max-w-7xl items-center justify-center sm:min-h-[470px]">
                 <div className="relative z-20 max-w-3xl px-3 text-center">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-red-500/40 bg-red-950/70 px-4 py-2 text-[11px] font-black tracking-[.25em] text-red-200 uppercase shadow-lg"><Sparkles className="h-4 w-4"/> The Gold & Goons Field Guide</div>
-                  <h1 className="mt-6 text-4xl font-black leading-[.98] tracking-tight text-white sm:text-6xl lg:text-7xl">Welcome to <span className="bg-gradient-to-r from-red-300 via-rose-200 to-orange-200 bg-clip-text text-transparent">Gold and Goons!</span></h1>
-                  <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-zinc-300 sm:text-lg">Learn the battlefield, discover your tribe, and master every trick, trap, and Goon standing between you and victory.</p>
+                  <h1 className="text-4xl font-black leading-[.98] tracking-tight text-white sm:text-6xl lg:text-7xl">Welcome to <span className="bg-gradient-to-r from-red-300 via-rose-200 to-orange-200 bg-clip-text text-transparent">Gold and Goons!</span></h1>
 
                 </div>
                 {guideTribes.flatMap((tribe) => allCards.filter((card) => card.tribe === tribe.id && card.imagePath).slice(3, 5)).map((card, index) => {const positions=['left-[1%] top-[7%] w-20 sm:w-28 -rotate-12','right-[1%] top-[6%] w-20 sm:w-28 rotate-12','left-[10%] bottom-[3%] w-20 sm:w-28 rotate-6','right-[10%] bottom-[3%] w-20 sm:w-28 -rotate-6','left-[22%] top-[2%] w-16 sm:w-24 -rotate-6','right-[22%] top-[2%] w-16 sm:w-24 rotate-6','left-[3%] top-[48%] w-16 sm:w-24 rotate-6','right-[3%] top-[48%] w-16 sm:w-24 -rotate-6','left-[31%] bottom-[1%] w-16 sm:w-24 rotate-3','right-[31%] bottom-[1%] w-16 sm:w-24 -rotate-3','left-[39%] top-[1%] w-14 sm:w-20 -rotate-3','right-[39%] top-[1%] w-14 sm:w-20 rotate-3'];return <button key={card.id} type="button" onClick={()=>setInspectedCard(card)} aria-label={`View ${card.name}`} className={`goldex-hero-card group absolute z-10 hidden overflow-hidden rounded-lg border-2 border-red-300/50 bg-zinc-950 shadow-[0_16px_55px_rgba(0,0,0,.65)] transition-all duration-300 hover:z-30 hover:scale-110 hover:border-red-200 hover:shadow-[0_20px_70px_rgba(220,38,38,.35)] sm:block ${positions[index % positions.length]}`} style={{animationDelay:`${index*.24}s`}}><img src={card.imagePath} alt={card.name} className="aspect-[3/4] w-full object-contain transition-transform duration-300 group-hover:scale-105"/></button>})}
               </div>
-              <div className="relative z-20 mt-3 flex justify-center sm:hidden"><span className="rounded-full border border-red-500/30 bg-zinc-950/90 px-4 py-2 text-[10px] font-black tracking-widest text-red-300">TAP A CARD BELOW TO EXPLORE</span></div>
+
               <div className="relative z-20 mx-auto mt-5 grid max-w-3xl grid-cols-3 gap-2 sm:hidden">{guideTribes.map((tribe)=>{const card=allCards.filter((entry)=>entry.tribe===tribe.id && entry.imagePath)[3];return card?<button key={tribe.id} type="button" onClick={()=>setInspectedCard(card)} aria-label={`View ${tribe.name} card ${card.name}`} className="overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 p-1 transition-transform active:scale-95"><img src={card.imagePath} alt={`${tribe.name}: ${card.name}`} className="aspect-[3/4] w-full object-contain"/><span className="block truncate px-1 py-1 text-[10px] font-bold text-zinc-300">{tribe.name}</span></button>:null})}</div>
             </section>
 
